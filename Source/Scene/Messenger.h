@@ -23,6 +23,7 @@ enum EMessageType
 {
 	Msg_Go,   // Start moving
 	Msg_Stop, // Stop all action
+	Msg_Start,
 };
 
 // A message contains a type and the UID that sent it.

@@ -1,0 +1,3 @@
+﻿  TankEntity.cpp
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(149,25): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+  TankAssignment.vcxproj -> C:\Users\CCame\source\repos\GamesThree\TankAssignment.exe

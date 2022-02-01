@@ -281,11 +281,25 @@ void UpdateScene( float updateTime )
 	// Call all entity update functions
 	EntityManager.UpdateAllEntities( updateTime );
 
+
 	// Set camera speeds
 	// Key F1 used for full screen toggle
 	if (KeyHit(Key_F2)) CameraMoveSpeed = 5.0f;
 	if (KeyHit(Key_F3)) CameraMoveSpeed = 40.0f;
-
+	if (KeyHit(Key_1))
+	{
+		SMessage msg;
+		msg.type = Msg_Start;
+		Messenger.SendMessageA(TankA, msg);
+		Messenger.SendMessageA(TankB, msg);
+	}
+	if (KeyHit(Key_2))
+	{
+		SMessage msg;
+		msg.type = Msg_Stop;
+		Messenger.SendMessageA(TankA, msg);
+		Messenger.SendMessageA(TankB, msg);
+	}
 	// Move the camera
 	MainCamera->Control( Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D, 
 	                     CameraMoveSpeed * updateTime, CameraRotSpeed * updateTime );

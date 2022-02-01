@@ -75,8 +75,15 @@ CTankEntity::CTankEntity
 	// Initialise other tank data and state
 	m_Speed = 0.0f;
 	m_HP = m_TankTemplate->GetMaxHP();
-	m_State = Go;
+	m_State = Inactive;
 	m_Timer = 0.0f;
+
+	//Initialise Patrol Data
+	patrolAmount = { 0,0,30 };
+	tankInitialPosition = Position();
+	patrolPoint1 = tankInitialPosition + patrolAmount;
+	patrolPoint2 = tankInitialPosition - patrolAmount;
+	reversed = false;
 }
 
 
@@ -98,6 +105,9 @@ bool CTankEntity::Update( TFloat32 updateTime )
 			case Msg_Stop:
 				m_State = Stop;
 				break;
+			case Msg_Start:
+				m_State = Patrol;
+
 		}
 	}
 
@@ -110,6 +120,60 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		//**** assignment the tank must move naturally between two specific points
 		m_Speed = 10.0f * Sin( m_Timer * 4.0f );
 		m_Timer += updateTime;
+	}
+	else if (m_State == Inactive)
+	{
+		m_Speed = 0;
+	}
+	else if (m_State == Patrol)
+	{
+		m_Speed = 10;
+		
+		if (Distance(Position(), patrolPoint1) < 2.0f)
+		{
+			reversed = true;
+		}
+		if (Distance(Position(), patrolPoint2) < 2.0f)
+		{
+			reversed = false;
+		}
+		if (!reversed)
+		{
+			Matrix(0).FaceTarget(patrolPoint1);
+		}
+		else
+		{
+			Matrix(0).FaceTarget(patrolPoint2);
+
+		}
+		Matrix(2).RotateY(0.01);
+
+		CMatrix4x4 tankWorldMatrix = Matrix(0) * Matrix(2);
+		CVector3 targetPosition;
+		if (m_Team == 0)
+		{
+			targetPosition = EntityManager.GetEntity(GetTankUID(1))->Matrix().GetPosition();
+		}
+		else
+		{
+			targetPosition = EntityManager.GetEntity(GetTankUID(0))->Matrix().GetPosition();
+		}
+		//CVector3 distanceVector = targetPosition - Position();
+		//auto dot = tankWorldMatrix.ZAxis().Dot(distanceVector);
+		//auto angle = acos(dot);
+		CMatrix4x4 aimingMatrix = Matrix(2);
+		aimingMatrix.FaceTarget(targetPosition);
+		if (Matrix(0) == aimingMatrix )
+		{
+			m_State = Aim;
+		}
+		
+
+
+	}
+	else if (m_State = Aim)
+	{
+		m_Speed = 0;
 	}
 	else
 	{

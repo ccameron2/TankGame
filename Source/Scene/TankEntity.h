@@ -171,6 +171,11 @@ private:
 	{
 		Stop,
 		Go,
+		//new
+		Inactive,
+		Patrol,
+		Aim,
+		Evade
 	};
 
 
@@ -188,6 +193,14 @@ private:
 	// Tank state
 	EState   m_State; // Current state
 	TFloat32 m_Timer; // A timer used in the example update function   
+
+	//Patrol Data
+	CVector3 patrolAmount;
+	CVector3 tankInitialPosition;
+	CVector3 patrolPoint1;
+	CVector3 patrolPoint2;
+	bool reversed;
+
 };
 
 
