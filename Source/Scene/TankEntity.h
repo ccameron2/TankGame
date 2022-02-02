@@ -207,8 +207,8 @@ private:
 
 	//Turret Rotation Variables
 	const float pi = 3.141592653589;
-	float targetAngle1 = cos(pi / 12); //15 degrees
-	float targetAngle2 = cos(6.02); //345 degrees
+	float targetAngle = pi/12; //15 degrees
+	float preciseTargetAngle = 5 * (pi / 180);
 	CVector3 evadePosition;
 
 	CTimer timer;

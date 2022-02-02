@@ -1,4 +1,7 @@
-﻿  Camera.cpp
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\Camera.cpp(125,7): warning C4244: '=': conversion from 'float' to 'gen::TInt32', possible loss of data
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\Camera.cpp(126,7): warning C4244: '=': conversion from 'float' to 'gen::TInt32', possible loss of data
+﻿  TankEntity.cpp
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.h(209,17): warning C4305: 'initializing': truncation from 'double' to 'const float'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(150,25): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(167,27): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(190,26): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(194,27): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
   TankAssignment.vcxproj -> C:\Users\CCame\source\repos\GamesThree\TankAssignment.exe

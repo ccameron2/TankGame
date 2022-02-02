@@ -149,7 +149,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		}
 		Matrix(2).RotateY(0.01);
 
-		if (IsLookingAtEnemy(targetAngle1) || IsLookingAtEnemy(targetAngle2))
+		if (IsLookingAtEnemy(ToRadians(15)))
 		{
 			timer.Start();
 			m_State = Aim;
@@ -159,16 +159,13 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	{
 		m_Speed = 0;
 
-		if (timer.GetTime() < 1)
+		if (timer.GetTime() < 2)
 		{
-			if (IsLookingAtEnemy(targetAngle1))
-			{
-				Matrix(2).RotateY(-0.015);
-			}
-			else if(IsLookingAtEnemy(targetAngle2))
-			{
-				Matrix(2).RotateY(0.015);
-			}		
+			
+			if (!IsLookingAtEnemy(ToRadians(4)))
+			{			
+				Matrix(2).RotateY(0.03);
+			}	
 		}
 		else
 		{
@@ -187,10 +184,14 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		CVector3 bodyRotation{ 0,0,0 };
 		Matrix(0).DecomposeAffineEuler(NULL, &bodyRotation, NULL);
 		CVector3 turretRotation{ 0,0,0 };
-		Matrix(2).DecomposeAffineEuler(NULL, &turretRotation, NULL);
-		if (turretRotation.y != bodyRotation.y)
+		(Matrix(0)*Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
+		if (turretRotation.y < bodyRotation.y)
 		{			
 			Matrix(2).RotateY(0.02);
+		}
+		else if (turretRotation.y > bodyRotation.y)
+		{
+			Matrix(2).RotateY(-0.02);
 		}
 		if (Distance(Position(), evadePosition) < 2.0f)
 		{
@@ -216,7 +217,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 
 bool CTankEntity::IsLookingAtEnemy(float targetAngle)
 {
-	CMatrix4x4 tankWorldMatrix = Matrix(0) * Matrix(2);
+	CMatrix4x4 turretWorldMatrix = Matrix(2) * Matrix();
 	CVector3 targetPosition;
 	if (m_Team == 0)
 	{
@@ -228,9 +229,10 @@ bool CTankEntity::IsLookingAtEnemy(float targetAngle)
 	}
 	auto distanceVector = targetPosition - Position();
 	distanceVector.Normalise();
-	tankWorldMatrix.ZAxis().Normalise();
-	auto dot = distanceVector.Dot(tankWorldMatrix.ZAxis());
-	if (dot > targetAngle)
+	auto turretFacingVector = turretWorldMatrix.ZAxis();
+	turretFacingVector.Normalise();
+	auto dot = distanceVector.Dot(turretFacingVector);
+	if (acos(dot) <= targetAngle)
 	{
 		return true;
 	}
