@@ -112,7 +112,21 @@ void CCamera::Control( EKeyCode turnUp, EKeyCode turnDown,
 bool CCamera::PixelFromWorldPt( CVector3 worldPt, TUInt32 ViewportWidth, TUInt32 ViewportHeight,
                                 TInt32* X, TInt32* Y )
 {
-	return false; // Placeholder code, fill in for User Interface assignment task
+	CVector3 viewportPt = m_MatViewProj.TransformPoint(worldPt);
+	if (viewportPt.z < 0)
+	{
+		return false;
+	}
+
+	viewportPt.x /= viewportPt.z;
+	viewportPt.y /= viewportPt.z;
+	float x = (viewportPt.x + 1) * (ViewportWidth / 2);
+	float y = (1 - viewportPt.y) * (ViewportHeight / 2);
+	*X = x;
+	*Y = y;
+
+	return true;
+	//return false; // Placeholder code, fill in for User Interface assignment task
 }
 
 // Calculate the world coordinates of a point on the near clip plane corresponding to given 

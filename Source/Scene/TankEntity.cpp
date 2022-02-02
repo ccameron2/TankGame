@@ -103,11 +103,12 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				m_State = Go;
 				break;
 			case Msg_Stop:
-				m_State = Stop;
+				m_State = Inactive;
 				break;
 			case Msg_Start:
 				m_State = Patrol;
-
+			case Msg_Hit:
+				m_HP -= 20;
 		}
 	}
 
@@ -148,44 +149,92 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		}
 		Matrix(2).RotateY(0.01);
 
-		CMatrix4x4 tankWorldMatrix = Matrix(0) * Matrix(2);
-		CVector3 targetPosition;
-		if (m_Team == 0)
+		if (IsLookingAtEnemy(targetAngle1) || IsLookingAtEnemy(targetAngle2))
 		{
-			targetPosition = EntityManager.GetEntity(GetTankUID(1))->Matrix().GetPosition();
+			timer.Start();
+			m_State = Aim;
+		}
+	}
+	else if (m_State == Aim)
+	{
+		m_Speed = 0;
+
+		if (timer.GetTime() < 1)
+		{
+			if (IsLookingAtEnemy(targetAngle1))
+			{
+				Matrix(2).RotateY(-0.015);
+			}
+			else if(IsLookingAtEnemy(targetAngle2))
+			{
+				Matrix(2).RotateY(0.015);
+			}		
 		}
 		else
 		{
-			targetPosition = EntityManager.GetEntity(GetTankUID(0))->Matrix().GetPosition();
+			timer.Stop();
+			timer.Reset();
+			//Fire a shell and change to evade state
+			//EntityManager.CreateShell("Projectile");
+			evadePosition = Position() + CVector3{ float(Random(1,40)), 0, float(Random(1,40)) };
+			m_State = Evade;
 		}
-		//CVector3 distanceVector = targetPosition - Position();
-		//auto dot = tankWorldMatrix.ZAxis().Dot(distanceVector);
-		//auto angle = acos(dot);
-		CMatrix4x4 aimingMatrix = Matrix(2);
-		aimingMatrix.FaceTarget(targetPosition);
-		if (Matrix(0) == aimingMatrix )
-		{
-			m_State = Aim;
-		}
-		
-
-
 	}
-	else if (m_State = Aim)
+	else if (m_State == Evade)
 	{
-		m_Speed = 0;
+		m_Speed = 10;
+		Matrix(0).FaceTarget(evadePosition);
+		CVector3 bodyRotation{ 0,0,0 };
+		Matrix(0).DecomposeAffineEuler(NULL, &bodyRotation, NULL);
+		CVector3 turretRotation{ 0,0,0 };
+		Matrix(2).DecomposeAffineEuler(NULL, &turretRotation, NULL);
+		if (turretRotation.y != bodyRotation.y)
+		{			
+			Matrix(2).RotateY(0.02);
+		}
+		if (Distance(Position(), evadePosition) < 2.0f)
+		{
+			m_State = Patrol;
+		}
+
 	}
 	else
 	{
 		m_Speed = 0;
 	}
 
+	if (m_HP < 0)
+	{
+		return false;
+	}
+
 	// Perform movement...
 	// Move along local Z axis scaled by update time
-	Matrix().MoveLocalZ( m_Speed * updateTime );
-
+	Matrix().MoveLocalZ( m_Speed * updateTime );	
 	return true; // Don't destroy the entity
 }
 
+bool CTankEntity::IsLookingAtEnemy(float targetAngle)
+{
+	CMatrix4x4 tankWorldMatrix = Matrix(0) * Matrix(2);
+	CVector3 targetPosition;
+	if (m_Team == 0)
+	{
+		targetPosition = EntityManager.GetEntity(GetTankUID(1))->Matrix().GetPosition();
+	}
+	else
+	{
+		targetPosition = EntityManager.GetEntity(GetTankUID(0))->Matrix().GetPosition();
+	}
+	auto distanceVector = targetPosition - Position();
+	distanceVector.Normalise();
+	tankWorldMatrix.ZAxis().Normalise();
+	auto dot = distanceVector.Dot(tankWorldMatrix.ZAxis());
+	if (dot > targetAngle)
+	{
+		return true;
+	}
+	return false;
+}
 
 } // namespace gen

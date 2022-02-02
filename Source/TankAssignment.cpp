@@ -272,6 +272,29 @@ void RenderSceneText( float updateTime )
 		RenderText( outText.str(), 0, 0, 1.0f, 1.0f, 0.0f );
 		outText.str("");
 	}
+
+	CEntity* tankEntityA = EntityManager.GetEntity(TankA);
+	CEntity* tankEntityB = EntityManager.GetEntity(TankB);
+
+	int X, Y = 0;
+	if (MainCamera->PixelFromWorldPt(tankEntityA->Position(), ViewportWidth, ViewportHeight, &X, &Y))
+	{
+		outText << tankEntityA->Template()->GetName().c_str() << " " << EntityManager.GetEntity(TankA)->GetName().c_str();
+		auto tankAPosition = tankEntityA->Position();
+		RenderText(outText.str(), X, Y, 1.0f, 0.0f, 0.0f, true);
+
+		outText.str("");
+	}
+
+	X, Y = 0;
+	if (MainCamera->PixelFromWorldPt(tankEntityB->Position(), ViewportWidth, ViewportHeight, &X, &Y))
+	{
+		outText << tankEntityB->Template()->GetName().c_str() << " " << EntityManager.GetEntity(TankB)->GetName().c_str();
+		auto tankBPosition = tankEntityB->Position();
+		RenderText(outText.str(), X, Y, 1.0f, 0.0f, 0.0f, true);
+
+		outText.str("");
+	}
 }
 
 

@@ -12,6 +12,7 @@ using namespace std;
 #include "Defines.h"
 #include "CVector3.h"
 #include "Entity.h"
+#include "CTimer.h"
 
 namespace gen
 {
@@ -157,6 +158,9 @@ public:
 	// Return false if the entity is to be destroyed
 	// Keep as a virtual function in case of further derivation
 	virtual bool Update( TFloat32 updateTime );
+
+	//Check if enemy tank is being looked at
+	bool IsLookingAtEnemy(float targetAngle);
 	
 
 /////////////////////////////////////
@@ -201,6 +205,13 @@ private:
 	CVector3 patrolPoint2;
 	bool reversed;
 
+	//Turret Rotation Variables
+	const float pi = 3.141592653589;
+	float targetAngle1 = cos(pi / 12); //15 degrees
+	float targetAngle2 = cos(6.02); //345 degrees
+	CVector3 evadePosition;
+
+	CTimer timer;
 };
 
 
