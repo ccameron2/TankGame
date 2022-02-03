@@ -53,6 +53,27 @@ CShellEntity::CShellEntity
 // Return false if the entity is to be destroyed
 bool CShellEntity::Update( TFloat32 updateTime )
 {
+	//Start timer if idle
+	if (hasStarted = false)
+	{
+		shellTimer.Start();
+		hasStarted = true;
+	}
+
+	//Destroy shell when timer runs out
+	if (shellTimer.GetTime() > 3)
+	{
+		shellTimer.Stop();
+		shellTimer.Reset();
+		hasStarted = false;
+		return false;
+	}
+
+	m_Speed = 10;
+
+	// Perform movement...
+	// Move along local Z axis scaled by update time
+	Matrix().MoveLocalZ(m_Speed * updateTime);
 	return true; // Placeholder
 }
 

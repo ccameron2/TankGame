@@ -159,7 +159,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	{
 		m_Speed = 0;
 
-		if (timer.GetTime() < 2)
+		if (timer.GetTime() < 1)
 		{
 			
 			if (!IsLookingAtEnemy(ToRadians(4)))
@@ -211,7 +211,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 
 	// Perform movement...
 	// Move along local Z axis scaled by update time
-	Matrix().MoveLocalZ( m_Speed * updateTime );	
+	Matrix().MoveLocalZ( m_Speed * updateTime );
 	return true; // Don't destroy the entity
 }
 

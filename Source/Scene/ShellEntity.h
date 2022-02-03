@@ -12,6 +12,7 @@ using namespace std;
 #include "Defines.h"
 #include "CVector3.h"
 #include "Entity.h"
+#include "CTimer.h"
 
 namespace gen
 {
@@ -70,8 +71,11 @@ private:
 
 	/////////////////////////////////////
 	// Data
-
 	// Add your shell data here
+	CTimer shellTimer;
+	bool hasStarted = false;
+	int m_Speed = 0;
+
 };
 
 
