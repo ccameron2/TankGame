@@ -46,7 +46,8 @@ public:
 		const string&    name = "",
 		const CVector3&  position = CVector3::kOrigin, 
 		const CVector3&  rotation = CVector3( 0.0f, 0.0f, 0.0f ),
-		const CVector3&  scale = CVector3( 1.0f, 1.0f, 1.0f )
+		const CVector3&  scale = CVector3( 1.0f, 1.0f, 1.0f ),
+		const int		 team = 0
 	);
 
 	// No destructor needed
@@ -75,7 +76,8 @@ private:
 	CTimer shellTimer;
 	bool hasStarted = false;
 	int m_Speed = 0;
-
+	int m_Team;
+	int m_EnemyTeam;
 };
 
 

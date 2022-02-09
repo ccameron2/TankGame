@@ -41,10 +41,20 @@ CShellEntity::CShellEntity
 	const string&    name /*=""*/,
 	const CVector3&  position /*= CVector3::kOrigin*/, 
 	const CVector3&  rotation /*= CVector3( 0.0f, 0.0f, 0.0f )*/,
-	const CVector3&  scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/
+	const CVector3&  scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/,
+	const int		 team
 ) : CEntity( entityTemplate, UID, name, position, rotation, scale )
 {
-	// Initialise any shell data you add
+	m_Speed = 100;
+	m_Team = team;
+	if (m_Team == 0)
+	{
+		m_EnemyTeam = 1;
+	}
+	else
+	{
+		m_EnemyTeam = 0;
+	}
 }
 
 
@@ -61,7 +71,7 @@ bool CShellEntity::Update( TFloat32 updateTime )
 	}
 
 	//Destroy shell when timer runs out
-	if (shellTimer.GetTime() > 3)
+	if (shellTimer.GetTime() > 2)
 	{
 		shellTimer.Stop();
 		shellTimer.Reset();
@@ -69,11 +79,22 @@ bool CShellEntity::Update( TFloat32 updateTime )
 		return false;
 	}
 
-	m_Speed = 10;
 
 	// Perform movement...
 	// Move along local Z axis scaled by update time
 	Matrix().MoveLocalZ(m_Speed * updateTime);
+
+	auto position = Position();
+	auto enemyPosition = EntityManager.GetEntity(GetTankUID(m_EnemyTeam))->Position();
+
+	if (Distance(position, enemyPosition) < 2.0f)
+	{
+		SMessage hitMsg;
+		hitMsg.from = GetUID();
+		hitMsg.type = Msg_Hit;
+		Messenger.SendMessage(GetTankUID(m_EnemyTeam), hitMsg);
+		return false;
+	}
 	return true; // Placeholder
 }
 

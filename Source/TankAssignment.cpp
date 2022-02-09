@@ -81,6 +81,8 @@ int NumUpdateTimes = 0;
 float AverageUpdateTime = -1.0f; // Invalid value at first
 
 
+bool toggleExtendedInfo = true;
+
 //-----------------------------------------------------------------------------
 // Scene management
 //-----------------------------------------------------------------------------
@@ -273,27 +275,25 @@ void RenderSceneText( float updateTime )
 		outText.str("");
 	}
 
-	CEntity* tankEntityA = EntityManager.GetEntity(TankA);
-	CEntity* tankEntityB = EntityManager.GetEntity(TankB);
-
-	int X, Y = 0;
-	if (MainCamera->PixelFromWorldPt(tankEntityA->Position(), ViewportWidth, ViewportHeight, &X, &Y))
+	for (int i = 0; i < 2; i++)
 	{
-		outText << tankEntityA->Template()->GetName().c_str() << " " << EntityManager.GetEntity(TankA)->GetName().c_str();
-		auto tankAPosition = tankEntityA->Position();
-		RenderText(outText.str(), X, Y, 1.0f, 0.0f, 0.0f, true);
-
-		outText.str("");
-	}
-
-	X, Y = 0;
-	if (MainCamera->PixelFromWorldPt(tankEntityB->Position(), ViewportWidth, ViewportHeight, &X, &Y))
-	{
-		outText << tankEntityB->Template()->GetName().c_str() << " " << EntityManager.GetEntity(TankB)->GetName().c_str();
-		auto tankBPosition = tankEntityB->Position();
-		RenderText(outText.str(), X, Y, 1.0f, 0.0f, 0.0f, true);
-
-		outText.str("");
+		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(GetTankUID(i)));
+		if (tankEntity)
+		{
+			int X, Y = 0;
+			if (MainCamera->PixelFromWorldPt(tankEntity->Position(), ViewportWidth, ViewportHeight, &X, &Y))
+			{
+				outText << tankEntity->Template()->GetName().c_str() << " " << tankEntity->GetName().c_str();
+				if (toggleExtendedInfo)
+				{
+					outText << " " << tankEntity->GetHP() << " "
+						<< tankEntity->GetState() << " "
+						<< tankEntity->GetShellCount();
+				}
+				RenderText(outText.str(), X, Y, 0.0f, 1.0f, 0.0f, true);
+				outText.str("");
+			}
+		}		
 	}
 }
 
@@ -303,7 +303,6 @@ void UpdateScene( float updateTime )
 {
 	// Call all entity update functions
 	EntityManager.UpdateAllEntities( updateTime );
-
 
 	// Set camera speeds
 	// Key F1 used for full screen toggle
@@ -322,6 +321,17 @@ void UpdateScene( float updateTime )
 		msg.type = Msg_Stop;
 		Messenger.SendMessageA(TankA, msg);
 		Messenger.SendMessageA(TankB, msg);
+	}
+	if (KeyHit(Key_0))
+	{
+		if (toggleExtendedInfo)
+		{
+			toggleExtendedInfo = false;
+		}
+		else
+		{
+			toggleExtendedInfo = true;
+		}
 	}
 	// Move the camera
 	MainCamera->Control( Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D, 

@@ -99,9 +99,6 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		// Set state variables based on received messages
 		switch (msg.type)
 		{
-			case Msg_Go:
-				m_State = Go;
-				break;
 			case Msg_Stop:
 				m_State = Inactive;
 				break;
@@ -113,23 +110,9 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	}
 
 	// Tank behaviour
-	// Only move if in Go state
-	if (m_State == Go)
-	{
-		// Cycle speed up and down using a sine wave - just demonstration behaviour
-		//**** Variations on this sine wave code does not count as patrolling - for the
-		//**** assignment the tank must move naturally between two specific points
-		m_Speed = 10.0f * Sin( m_Timer * 4.0f );
-		m_Timer += updateTime;
-	}
-	else if (m_State == Inactive)
-	{
-		m_Speed = 0;
-	}
-	else if (m_State == Patrol)
+	if (m_State == Patrol)
 	{
 		m_Speed = 10;
-		
 		if (Distance(Position(), patrolPoint1) < 2.0f)
 		{
 			reversed = true;
@@ -160,11 +143,10 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		m_Speed = 0;
 
 		if (timer.GetTime() < 1)
-		{
-			
+		{			
 			if (!IsLookingAtEnemy(ToRadians(4)))
 			{			
-				Matrix(2).RotateY(0.03);
+				Matrix(2).RotateY(0.02);
 			}	
 		}
 		else
@@ -172,7 +154,10 @@ bool CTankEntity::Update( TFloat32 updateTime )
 			timer.Stop();
 			timer.Reset();
 			//Fire a shell and change to evade state
-			//EntityManager.CreateShell("Projectile");
+			CVector3 turretRotation;
+			(Matrix(0) * Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
+			EntityManager.CreateShell("Shell Type 1","", Position(),turretRotation,{1,1,1}, m_Team);
+			m_ShellCount++;
 			evadePosition = Position() + CVector3{ float(Random(1,40)), 0, float(Random(1,40)) };
 			m_State = Evade;
 		}
@@ -181,15 +166,15 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	{
 		m_Speed = 10;
 		Matrix(0).FaceTarget(evadePosition);
-		CVector3 bodyRotation{ 0,0,0 };
+		CVector3 bodyRotation;
 		Matrix(0).DecomposeAffineEuler(NULL, &bodyRotation, NULL);
-		CVector3 turretRotation{ 0,0,0 };
+		CVector3 turretRotation;
 		(Matrix(0)*Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
-		if (turretRotation.y < bodyRotation.y)
+		if (turretRotation.y < bodyRotation.y - ToRadians(3))
 		{			
 			Matrix(2).RotateY(0.02);
 		}
-		else if (turretRotation.y > bodyRotation.y)
+		else if (turretRotation.y > bodyRotation.y + ToRadians(3))
 		{
 			Matrix(2).RotateY(-0.02);
 		}
@@ -204,7 +189,8 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		m_Speed = 0;
 	}
 
-	if (m_HP < 0)
+
+	if (m_HP <= 0)
 	{
 		return false;
 	}
@@ -212,6 +198,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	// Perform movement...
 	// Move along local Z axis scaled by update time
 	Matrix().MoveLocalZ( m_Speed * updateTime );
+
 	return true; // Don't destroy the entity
 }
 
@@ -219,22 +206,27 @@ bool CTankEntity::IsLookingAtEnemy(float targetAngle)
 {
 	CMatrix4x4 turretWorldMatrix = Matrix(2) * Matrix();
 	CVector3 targetPosition;
+	CEntity* enemyTank;
 	if (m_Team == 0)
 	{
-		targetPosition = EntityManager.GetEntity(GetTankUID(1))->Matrix().GetPosition();
+		enemyTank = EntityManager.GetEntity(GetTankUID(1));
 	}
 	else
 	{
-		targetPosition = EntityManager.GetEntity(GetTankUID(0))->Matrix().GetPosition();
+		enemyTank = EntityManager.GetEntity(GetTankUID(0));
 	}
-	auto distanceVector = targetPosition - Position();
-	distanceVector.Normalise();
-	auto turretFacingVector = turretWorldMatrix.ZAxis();
-	turretFacingVector.Normalise();
-	auto dot = distanceVector.Dot(turretFacingVector);
-	if (acos(dot) <= targetAngle)
+	if (enemyTank)
 	{
-		return true;
+		targetPosition = enemyTank->Matrix().Position();
+		auto distanceVector = targetPosition - Position();
+		distanceVector.Normalise();
+		auto turretFacingVector = turretWorldMatrix.ZAxis();
+		turretFacingVector.Normalise();
+		auto dot = distanceVector.Dot(turretFacingVector);
+		if (acos(dot) <= targetAngle)
+		{
+			return true;
+		}
 	}
 	return false;
 }

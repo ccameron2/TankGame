@@ -136,7 +136,19 @@ public:
 	);
 
 	// No destructor needed
+	
+private:
+	/////////////////////////////////////
+	// Types
 
+	// States available for a tank - placeholders for shell code
+	enum EState
+	{
+		Inactive,
+		Patrol,
+		Aim,
+		Evade
+	};
 
 /////////////////////////////////////
 //	Public interface
@@ -150,6 +162,39 @@ public:
 		return m_Speed;
 	}
 
+	TInt32 GetHP()
+	{
+		return m_HP;
+	}
+
+	string GetState()
+	{
+		if (m_State == 0)
+		{
+			return "Inactive";
+		}
+		else if(m_State == 1)
+		{
+			return "Patrol";
+		}
+		else if (m_State == 2)
+		{
+			return "Aim";
+		}
+		else if(m_State == 3)
+		{
+			return "Evade";
+		}
+		else
+		{
+			return "Error";
+		}
+	}
+
+	int GetShellCount()
+	{
+		return m_ShellCount;
+	}
 
 	/////////////////////////////////////
 	// Update
@@ -166,22 +211,6 @@ public:
 /////////////////////////////////////
 //	Private interface
 private:
-
-	/////////////////////////////////////
-	// Types
-
-	// States available for a tank - placeholders for shell code
-	enum EState
-	{
-		Stop,
-		Go,
-		//new
-		Inactive,
-		Patrol,
-		Aim,
-		Evade
-	};
-
 
 	/////////////////////////////////////
 	// Data
@@ -212,7 +241,6 @@ private:
 	CVector3 evadePosition;
 
 	CTimer timer;
+	int m_ShellCount = 0;
 };
-
-
 } // namespace gen
