@@ -134,7 +134,17 @@ bool CCamera::PixelFromWorldPt( CVector3 worldPt, TUInt32 ViewportWidth, TUInt32
 CVector3 CCamera::WorldPtFromPixel( TInt32 X, TInt32 Y, 
                                     TUInt32 ViewportWidth, TUInt32 ViewportHeight )
 {
-	return CVector3::kOrigin; // Placeholder code, fill in for User Interface assignment task
+	CVector3 cameraPt;
+	cameraPt.x = static_cast<TFloat32>(X) / (ViewportWidth * 0.5f) - 1.0f;
+	cameraPt.y = 1.0f - static_cast<TFloat32>(Y) / (ViewportHeight * 0.5f);
+	cameraPt.z = m_NearClip;
+
+	TFloat32 apertureHeight = Tan(m_FOV * 0.5f) * m_NearClip;
+	cameraPt.x *= apertureHeight * m_Aspect;
+	cameraPt.y *= apertureHeight;
+	CVector3 worldPt = InverseAffine(m_MatView).TransformPoint(cameraPt);
+
+	return worldPt; // Placeholder code, fill in for User Interface assignment task
 }
 
 

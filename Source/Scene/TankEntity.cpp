@@ -106,6 +106,8 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				m_State = Patrol;
 			case Msg_Hit:
 				m_HP -= 20;
+			case Msg_Evade:
+				m_State = Evade;
 		}
 	}
 

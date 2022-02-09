@@ -80,6 +80,9 @@ float SumUpdateTimes = 0.0f;
 int NumUpdateTimes = 0;
 float AverageUpdateTime = -1.0f; // Invalid value at first
 
+//Picking
+CEntity* NearestEntity;
+float NearestEntityDistance;
 
 bool toggleExtendedInfo = true;
 
@@ -275,6 +278,35 @@ void RenderSceneText( float updateTime )
 		outText.str("");
 	}
 
+	//Picking
+	CVector2 MousePixel = { TFloat32(MouseX),TFloat32(MouseY) };
+
+	EntityManager.BeginEnumEntities("", "", "Tank");
+	CEntity* entity;
+	while (entity = EntityManager.EnumEntity())
+	{
+		if (NearestEntity == 0)
+		{
+			NearestEntityDistance = 9999999;
+		}
+		else
+		{
+			TInt32 x, y = 0;
+			MainCamera->PixelFromWorldPt(NearestEntity->Position(), ViewportWidth, ViewportHeight, &x, &y);
+			CVector2 nearestEntityPos2D = { TFloat32(x),TFloat32(y) };
+			NearestEntityDistance = Distance(MousePixel, nearestEntityPos2D);
+		}
+		TInt32 x, y = 0;
+		MainCamera->PixelFromWorldPt(entity->Position(), ViewportWidth, ViewportHeight, &x, &y);
+		CVector2 entityPos2D = { TFloat32(x),TFloat32(y) };
+		auto currentEntityDistance = Distance(MousePixel, entityPos2D);
+		if (currentEntityDistance < NearestEntityDistance)
+		{
+			NearestEntity = entity;
+		}
+	}
+	EntityManager.EndEnumEntities();
+
 	for (int i = 0; i < 2; i++)
 	{
 		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(GetTankUID(i)));
@@ -290,11 +322,15 @@ void RenderSceneText( float updateTime )
 						<< tankEntity->GetState() << " "
 						<< tankEntity->GetShellCount();
 				}
-				RenderText(outText.str(), X, Y, 0.0f, 1.0f, 0.0f, true);
+				if (tankEntity == NearestEntity) { RenderText(outText.str(), X, Y, 1.0f, 1.0f, 0.0f, true); }
+				else{ RenderText(outText.str(), X, Y, 0.0f, 1.0f, 0.0f, true); }			
 				outText.str("");
 			}
 		}		
 	}
+
+
+
 }
 
 
@@ -332,6 +368,12 @@ void UpdateScene( float updateTime )
 		{
 			toggleExtendedInfo = true;
 		}
+	}
+	if (KeyHit(Mouse_LButton))
+	{
+		SMessage msg; 
+		msg.type = Msg_Evade;
+		Messenger.SendMessageA(NearestEntity->GetUID(), msg);
 	}
 	// Move the camera
 	MainCamera->Control( Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D, 
