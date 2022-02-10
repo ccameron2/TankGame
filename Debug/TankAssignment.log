@@ -1,3 +1,4 @@
 ﻿  TankAssignment.cpp
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.h(238,17): warning C4305: 'initializing': truncation from 'double' to 'const float'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.h(244,17): warning C4305: 'initializing': truncation from 'double' to 'const float'
+C:\Users\CCame\source\repos\GamesThree\Source\TankAssignment.cpp(423,34): warning C4244: 'argument': conversion from 'int' to 'const gen::TFloat32', possible loss of data
   TankAssignment.vcxproj -> C:\Users\CCame\source\repos\GamesThree\TankAssignment.exe

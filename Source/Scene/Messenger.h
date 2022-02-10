@@ -25,7 +25,8 @@ enum EMessageType
 	Msg_Stop, // Stop all action
 	Msg_Start,
 	Msg_Hit,
-	Msg_Evade
+	Msg_Evade,
+	Msg_Help
 };
 
 // A message contains a type and the UID that sent it.

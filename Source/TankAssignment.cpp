@@ -67,6 +67,10 @@ CEntityManager EntityManager;
 // Tank UIDs
 TEntityUID TankA;
 TEntityUID TankB;
+TEntityUID TankC;
+TEntityUID TankD;
+TEntityUID TankE;
+TEntityUID TankF;
 
 // Other scene elements
 const int NumLights = 2;
@@ -85,6 +89,12 @@ CEntity* NearestEntity;
 float NearestEntityDistance;
 
 bool toggleExtendedInfo = true;
+bool grabbedTank = false;
+int pickDist = 50;
+
+
+//The program insists on clicking once when run?
+bool whyisthishappening = false;
 
 //-----------------------------------------------------------------------------
 // Scene management
@@ -141,11 +151,18 @@ bool SceneSetup()
 	// Create tank entities
 
 	// Type (template name), team number, tank name, position, rotation
-	TankA = EntityManager.CreateTank("Rogue Scout", 0, "A-1", CVector3(-30.0f, 0.5f, -20.0f),
+	TankA = EntityManager.CreateTank("Rogue Scout", 0, "A-1", CVector3(-20.0f, 0.5f, -20.0f),
 		CVector3(0.0f, ToRadians(0.0f), 0.0f));
-	TankB = EntityManager.CreateTank("Oberon MkII", 1, "B-1", CVector3(30.0f, 0.5f, 20.0f),
+	TankB = EntityManager.CreateTank("Oberon MkII", 1, "B-1", CVector3(20.0f, 0.5f, 20.0f),
 		CVector3(0.0f, ToRadians(180.0f), 0.0f));
-
+	TankC = EntityManager.CreateTank("Rogue Scout", 0, "A-2", CVector3(-40.0f, 0.5f, -20.0f),
+		CVector3(0.0f, ToRadians(0.0f), 0.0f));
+	TankD = EntityManager.CreateTank("Oberon MkII", 1, "B-2", CVector3(40.0f, 0.5f, 20.0f),
+		CVector3(0.0f, ToRadians(180.0f), 0.0f));
+	TankE = EntityManager.CreateTank("Rogue Scout", 0, "A-3", CVector3(-60.0f, 0.5f, -20.0f),
+		CVector3(0.0f, ToRadians(0.0f), 0.0f));
+	TankF = EntityManager.CreateTank("Oberon MkII", 1, "B-3", CVector3(60.0f, 0.5f, 20.0f),
+		CVector3(0.0f, ToRadians(180.0f), 0.0f));
 
 	/////////////////////////////
 	// Camera / light setup
@@ -279,37 +296,45 @@ void RenderSceneText( float updateTime )
 	}
 
 	//Picking
-	CVector2 MousePixel = { TFloat32(MouseX),TFloat32(MouseY) };
+	if (!grabbedTank)
+	{
+		CVector2 MousePixel = { TFloat32(MouseX),TFloat32(MouseY) };
 
+		EntityManager.BeginEnumEntities("", "", "Tank");
+		CEntity* entity;
+		while (entity = EntityManager.EnumEntity())
+		{
+			if (NearestEntity == 0)
+			{
+				NearestEntityDistance = 9999999;
+			}
+			else
+			{
+				if (NearestEntity)			
+				{
+					TInt32 x, y = 0;
+					MainCamera->PixelFromWorldPt(NearestEntity->Position(), ViewportWidth, ViewportHeight, &x, &y);
+					CVector2 nearestEntityPos2D = { TFloat32(x),TFloat32(y) };
+					NearestEntityDistance = Distance(MousePixel, nearestEntityPos2D);
+				}		
+			}
+			TInt32 x, y = 0;
+			MainCamera->PixelFromWorldPt(entity->Position(), ViewportWidth, ViewportHeight, &x, &y);
+			CVector2 entityPos2D = { TFloat32(x),TFloat32(y) };
+			auto currentEntityDistance = Distance(MousePixel, entityPos2D);
+			if (currentEntityDistance < NearestEntityDistance)
+			{
+				NearestEntity = entity;
+			}
+		}
+		EntityManager.EndEnumEntities();
+	}
+	
 	EntityManager.BeginEnumEntities("", "", "Tank");
-	CEntity* entity;
+	CEntity* entity = 0;
 	while (entity = EntityManager.EnumEntity())
 	{
-		if (NearestEntity == 0)
-		{
-			NearestEntityDistance = 9999999;
-		}
-		else
-		{
-			TInt32 x, y = 0;
-			MainCamera->PixelFromWorldPt(NearestEntity->Position(), ViewportWidth, ViewportHeight, &x, &y);
-			CVector2 nearestEntityPos2D = { TFloat32(x),TFloat32(y) };
-			NearestEntityDistance = Distance(MousePixel, nearestEntityPos2D);
-		}
-		TInt32 x, y = 0;
-		MainCamera->PixelFromWorldPt(entity->Position(), ViewportWidth, ViewportHeight, &x, &y);
-		CVector2 entityPos2D = { TFloat32(x),TFloat32(y) };
-		auto currentEntityDistance = Distance(MousePixel, entityPos2D);
-		if (currentEntityDistance < NearestEntityDistance)
-		{
-			NearestEntity = entity;
-		}
-	}
-	EntityManager.EndEnumEntities();
-
-	for (int i = 0; i < 2; i++)
-	{
-		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(GetTankUID(i)));
+		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(entity->GetUID()));
 		if (tankEntity)
 		{
 			int X, Y = 0;
@@ -322,14 +347,18 @@ void RenderSceneText( float updateTime )
 						<< tankEntity->GetState() << " "
 						<< tankEntity->GetShellCount();
 				}
-				if (tankEntity == NearestEntity) { RenderText(outText.str(), X, Y, 1.0f, 1.0f, 0.0f, true); }
-				else{ RenderText(outText.str(), X, Y, 0.0f, 1.0f, 0.0f, true); }			
+				if (tankEntity == NearestEntity) 
+				{ 
+					if (!grabbedTank) { RenderText(outText.str(), X, Y, 1.0f, 1.0f, 0.0f, true); }
+					else { RenderText(outText.str(), X, Y, 1.0f, 0.0f, 0.0f, true); }
+				}
+				else if(tankEntity->GetTeam() == 0) { RenderText(outText.str(), X, Y, 0.0f, 1.0f, 0.0f, true); }
+				else if (tankEntity->GetTeam() == 1) { RenderText(outText.str(), X, Y, 0.0f, 0.0f, 1.0f, true); }
 				outText.str("");
 			}
-		}		
+		}
 	}
-
-
+	EntityManager.EndEnumEntities();
 
 }
 
@@ -346,17 +375,26 @@ void UpdateScene( float updateTime )
 	if (KeyHit(Key_F3)) CameraMoveSpeed = 40.0f;
 	if (KeyHit(Key_1))
 	{
-		SMessage msg;
-		msg.type = Msg_Start;
-		Messenger.SendMessageA(TankA, msg);
-		Messenger.SendMessageA(TankB, msg);
+		EntityManager.BeginEnumEntities("", "", "Tank");
+		CEntity* entity = 0;
+		while (entity = EntityManager.EnumEntity())
+		{
+			SMessage msg;
+			msg.type = Msg_Start;
+			Messenger.SendMessageA(entity->GetUID(), msg);
+		}
+
 	}
 	if (KeyHit(Key_2))
 	{
-		SMessage msg;
-		msg.type = Msg_Stop;
-		Messenger.SendMessageA(TankA, msg);
-		Messenger.SendMessageA(TankB, msg);
+		EntityManager.BeginEnumEntities("", "", "Tank");
+		CEntity* entity = 0;
+		while (entity = EntityManager.EnumEntity())
+		{
+			SMessage msg;
+			msg.type = Msg_Stop;
+			Messenger.SendMessageA(entity->GetUID(), msg);
+		}
 	}
 	if (KeyHit(Key_0))
 	{
@@ -371,9 +409,30 @@ void UpdateScene( float updateTime )
 	}
 	if (KeyHit(Mouse_LButton))
 	{
-		SMessage msg; 
-		msg.type = Msg_Evade;
-		Messenger.SendMessageA(NearestEntity->GetUID(), msg);
+		if (!whyisthishappening)
+		{
+			whyisthishappening = true;
+		}
+		else
+		{
+			if (grabbedTank)
+			{
+				auto worldPt = MainCamera->WorldPtFromPixel(MouseX, MouseY, ViewportWidth, ViewportHeight);
+				auto direction = worldPt - MainCamera->Position();
+				direction.Normalise();
+				auto newPosition = worldPt + pickDist * direction;
+				NearestEntity->Position().x = newPosition.x;
+				NearestEntity->Position().z = newPosition.z;
+				grabbedTank = false;
+			}
+			else
+			{
+				grabbedTank = true;
+			}
+			SMessage msg;
+			msg.type = Msg_Start;
+			Messenger.SendMessageA(NearestEntity->GetUID(), msg);
+		}
 	}
 	// Move the camera
 	MainCamera->Control( Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D, 

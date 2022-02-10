@@ -202,6 +202,36 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 			gen::MouseX = MAKEPOINTS(lParam).x; 
 			gen::MouseY = MAKEPOINTS(lParam).y;
 		}
+		case WM_LBUTTONDOWN:
+		{
+			gen::KeyDownEvent(gen::Mouse_LButton);
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			gen::KeyUpEvent(gen::Mouse_LButton);
+			break;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			gen::KeyDownEvent(gen::Mouse_RButton);
+			break;
+		}
+		case WM_RBUTTONUP:
+		{
+			gen::KeyUpEvent(gen::Mouse_RButton);
+			break;
+		}
+		case WM_MBUTTONDOWN:
+		{
+			gen::KeyDownEvent(gen::Mouse_MButton);
+			break;
+		}
+		case WM_MBUTTONUP:
+		{
+			gen::KeyUpEvent(gen::Mouse_MButton);
+			break;
+		}
     }
 
     return DefWindowProc( hWnd, msg, wParam, lParam );

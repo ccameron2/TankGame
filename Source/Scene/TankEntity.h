@@ -137,18 +137,7 @@ public:
 
 	// No destructor needed
 	
-private:
-	/////////////////////////////////////
-	// Types
 
-	// States available for a tank - placeholders for shell code
-	enum EState
-	{
-		Inactive,
-		Patrol,
-		Aim,
-		Evade
-	};
 
 /////////////////////////////////////
 //	Public interface
@@ -196,6 +185,11 @@ public:
 		return m_ShellCount;
 	}
 
+	int GetTeam()
+	{
+		return m_Team;
+	}
+
 	/////////////////////////////////////
 	// Update
 
@@ -206,12 +200,24 @@ public:
 
 	//Check if enemy tank is being looked at
 	bool IsLookingAtEnemy(float targetAngle);
+
+	void FindNearestTank();
 	
 
 /////////////////////////////////////
 //	Private interface
 private:
+	/////////////////////////////////////
+	// Types
 
+	// States available for a tank - placeholders for shell code
+	enum EState
+	{
+		Inactive,
+		Patrol,
+		Aim,
+		Evade
+	};
 	/////////////////////////////////////
 	// Data
 
@@ -242,5 +248,10 @@ private:
 
 	CTimer timer;
 	int m_ShellCount = 0;
+	bool positionChosen = false;
+	CEntity* nearestEnemyTank = 0;
+	TFloat32 nearestTankDistance;
+	TEntityUID tankToHelp = 0;
+	bool timerStarted = false;
 };
 } // namespace gen

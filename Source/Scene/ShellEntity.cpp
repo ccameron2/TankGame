@@ -84,17 +84,26 @@ bool CShellEntity::Update( TFloat32 updateTime )
 	// Move along local Z axis scaled by update time
 	Matrix().MoveLocalZ(m_Speed * updateTime);
 
-	auto position = Position();
-	auto enemyPosition = EntityManager.GetEntity(GetTankUID(m_EnemyTeam))->Position();
-
-	if (Distance(position, enemyPosition) < 2.0f)
+	EntityManager.BeginEnumEntities("", "", "Tank");
+	CEntity* entity;
+	while (entity = EntityManager.EnumEntity())
 	{
-		SMessage hitMsg;
-		hitMsg.from = GetUID();
-		hitMsg.type = Msg_Hit;
-		Messenger.SendMessage(GetTankUID(m_EnemyTeam), hitMsg);
-		return false;
+		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
+		if (tankEntity->GetTeam() != m_Team)
+		{
+			if (Distance(Position(), tankEntity->Position()) < 2.0f)
+			{
+				SMessage hitMsg;
+				hitMsg.from = GetUID();
+				hitMsg.type = Msg_Hit;
+				Messenger.SendMessage(tankEntity->GetUID(), hitMsg);
+				EntityManager.EndEnumEntities();
+				return false;
+			}
+		}
 	}
+	EntityManager.EndEnumEntities();
+
 	return true; // Placeholder
 }
 
