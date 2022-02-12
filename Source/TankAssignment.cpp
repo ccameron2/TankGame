@@ -115,12 +115,12 @@ bool SceneSetup()
 
 	LevelParser.ParseFile("Entities.xml");
 
-	for (int tree = 0; tree < 100; ++tree)
+	EntityManager.BeginEnumEntities("Tree", "Tree", "Scenery");
+	CEntity* entity = 0;
+	while (entity = EntityManager.EnumEntity())
 	{
-		// Some random trees
-		EntityManager.CreateEntity( "Tree", "Tree",
-			                        CVector3(Random(-200.0f, 30.0f), 0.0f, Random(40.0f, 150.0f)),
-			                        CVector3(0.0f, Random(0.0f, 2.0f * kfPi), 0.0f) );
+		entity->Position() = CVector3(Random(-200.0f, 30.0f), 0.0f, Random(40.0f, 150.0f));
+		entity->Matrix().RotateY(Random(0.0f, 2.0f * kfPi));
 	}
 
 	/////////////////////////////

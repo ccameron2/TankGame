@@ -27,20 +27,8 @@
   
   <!-- Scene Setup -->
   <Entities>
- 
-    <!-- Scenery -->
-    <Entity Type="Skybox" Name="Skybox">
-      <Position X="0.0" Y="-10000.0" Z="0.0"/>
-      <Scale X="10" Y="10" Z="10"/>
-    </Entity>
-    <Entity Type="Floor" Name="Floor">
-      <Position X="0.0" Y="0.0" Z="0.0"/>
-    </Entity>
-    <Entity Type="Building" Name="Building">
-      <Position X="0.0" Y="0.0" Z="40.0"/>
-    </Entity>
 
-    <!-- Tanks -->
+        <!-- Tanks -->
     <Team Name="0">
       <Entity Type="Rogue Scout" Name="Rogue Scout">
         <Position X="-20.0" Y="0.5" Z="-20.0"/>
@@ -70,6 +58,118 @@
         <Rotation X="0.0" Y="180.0" Z="-0.0"/>
       </Entity>
     </Team>
+    
+    <!-- Scenery -->
+    <Entity Type="Skybox" Name="Skybox">
+      <Position X="0.0" Y="-10000.0" Z="0.0"/>
+      <Scale X="10" Y="10" Z="10"/>
+    </Entity>
+    <Entity Type="Floor" Name="Floor">
+      <Position X="0.0" Y="0.0" Z="0.0"/>
+    </Entity>
+    <Entity Type="Building" Name="Building">
+      <Position X="0.0" Y="0.0" Z="40.0"/>
+    </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
+    <Entity Type="Tree" Name="Tree"> </Entity>
 
   </Entities>
   <!-- End of Scene Setup -->
