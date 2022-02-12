@@ -66,8 +66,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -101,8 +100,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -154,6 +152,8 @@
     <ClCompile Include="Source\Math\MathIO.cpp" />
     <ClCompile Include="Source\MainApp.cpp" />
     <ClCompile Include="Source\TankAssignment.cpp" />
+    <ClCompile Include="Source\XML\CParseLevel.cpp" />
+    <ClCompile Include="Source\XML\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Scene\Camera.h" />
@@ -188,6 +188,8 @@
     <ClInclude Include="Source\Math\MathDX.h" />
     <ClInclude Include="Source\Math\MathIO.h" />
     <ClInclude Include="Source\TankAssignment.h" />
+    <ClInclude Include="Source\XML\CParseLevel.h" />
+    <ClInclude Include="Source\XML\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Render\TankAssignment.fx" />

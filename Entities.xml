@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!-- Level Setup -->
+<Level>
+
+  <!-- Entity Templates -->
+  <Templates>
+  
+    <!-- Scenery -->
+    <EntityTemplate Type="Scenery" Name="Skybox" Mesh="Skybox.x"/>
+    <EntityTemplate Type="Scenery" Name="Floor" Mesh="Floor.x"/>
+    <EntityTemplate Type="Scenery" Name="Building" Mesh="Building.x"/>
+    <EntityTemplate Type="Scenery" Name="Tree" Mesh="Tree1.x"/>
+
+    <!-- Tank Types -->
+    <EntityTemplate Type="Tank" Name="Rogue Scout" Mesh="HoverTank01.x" MaxSpeed = "24.0" Acceleration = "2.2" TurnSpeed = "2.0" TurretTurnSpeed = "0.79" MaxHP = "130" ShellDamage = "20"/>
+    <EntityTemplate Type="Tank" Name="Rogue Warrior" Mesh="HoverTank01.x" MaxSpeed = "18.0" Acceleration = "1.8" TurnSpeed = "1.3" TurretTurnSpeed = "1.04" MaxHP = "120" ShellDamage = "35"/>
+    <EntityTemplate Type="Tank" Name="Rogue Leader" Mesh="HoverTank01.x" MaxSpeed = "28.0" Acceleration = "2.4" TurnSpeed = "2.1" TurretTurnSpeed = "0.79" MaxHP = "150" ShellDamage = "30"/>
+    <EntityTemplate Type="Tank" Name="Oberon MkII" Mesh="HoverTank01.x" MaxSpeed = "14.0" Acceleration = "1.4" TurnSpeed = "1.4" TurretTurnSpeed = "1.04" MaxHP = "140" ShellDamage = "40"/>
+    <EntityTemplate Type="Tank" Name="Oberon MkIII" Mesh="HoverTank01.x" MaxSpeed = "26.0" Acceleration = "2.0" TurnSpeed = "2.2" TurretTurnSpeed = "0.79" MaxHP = "170" ShellDamage = "60"/>
+    <EntityTemplate Type="Tank" Name="Oberon MkIV" Mesh="HoverTank01.x" MaxSpeed = "20.0" Acceleration = "1.9" TurnSpeed = "1.5" TurretTurnSpeed = "1.04" MaxHP = "160" ShellDamage = "55"/>
+
+    <EntityTemplate Type="Projectile" Name="Shell Type 1" Mesh="Bullet.x"/>
+
+  </Templates>
+  <!-- End of Entity Types -->
+
+  
+  <!-- Scene Setup -->
+  <Entities>
+ 
+    <!-- Scenery -->
+    <Entity Type="Skybox" Name="Skybox">
+      <Position X="0.0" Y="-10000.0" Z="0.0"/>
+      <Scale X="10" Y="10" Z="10"/>
+    </Entity>
+    <Entity Type="Floor" Name="Floor">
+      <Position X="0.0" Y="0.0" Z="0.0"/>
+    </Entity>
+    <Entity Type="Building" Name="Building">
+      <Position X="0.0" Y="0.0" Z="40.0"/>
+    </Entity>
+
+    <!-- Tanks -->
+    <Team Name="0">
+      <Entity Type="Rogue Scout" Name="Rogue Scout">
+        <Position X="-20.0" Y="0.5" Z="-20.0"/>
+        <Rotation X="0.0" Y="0.0" Z="-0.0"/>
+      </Entity>
+      <Entity Type="Rogue Warrior" Name="Rogue Warrior">
+        <Position X="-40.0" Y="0.5" Z="-20.0"/>
+        <Rotation X="0.0" Y="0.0" Z="-0.0"/>
+      </Entity>
+      <Entity Type="Rogue Leader" Name="Rogue Leader">
+        <Position X="-60.0" Y="0.5" Z="-20.0"/>
+        <Rotation X="0.0" Y="0.0" Z="-0.0"/>
+      </Entity>
+    </Team>
+
+    <Team Name="1">
+     <Entity Type="Oberon MkII" Name="Oberon MkII">
+        <Position X="20.0" Y="0.5" Z="20.0"/>
+        <Rotation X="0.0" Y="180.0" Z="-0.0"/>
+     </Entity>
+     <Entity Type="Oberon MkIII" Name="Oberon MkIII">
+        <Position X="40.0" Y="0.5" Z="20.0"/>
+        <Rotation X="0.0" Y="180.0" Z="-0.0"/>
+      </Entity>
+      <Entity Type="Oberon MkIV" Name="Oberon MkIV">
+        <Position X="60.0" Y="0.5" Z="20.0"/>
+        <Rotation X="0.0" Y="180.0" Z="-0.0"/>
+      </Entity>
+    </Team>
+
+  </Entities>
+  <!-- End of Scene Setup -->
+
+</Level>

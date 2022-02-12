@@ -17,6 +17,7 @@ using namespace std;
 #include "Light.h"
 #include "EntityManager.h"
 #include "Messenger.h"
+#include "XML/CParseLevel.h"
 #include "TankAssignment.h"
 
 namespace gen
@@ -63,6 +64,7 @@ extern CMessenger Messenger;
 
 // Entity manager
 CEntityManager EntityManager;
+CParseLevel LevelParser(&EntityManager);
 
 // Tank UIDs
 TEntityUID TankA;
@@ -92,6 +94,9 @@ bool toggleExtendedInfo = true;
 bool grabbedTank = false;
 int pickDist = 50;
 
+//Chase camera
+bool chaseCamera = false;
+CEntity* chasedTank;
 
 //The program insists on clicking once when run?
 bool whyisthishappening = false;
@@ -108,22 +113,8 @@ bool SceneSetup()
 
 	InitialiseMethods();
 
+	LevelParser.ParseFile("Entities.xml");
 
-	//////////////////////////////////////////
-	// Create scenery templates and entities
-
-	// Create scenery templates - loads the meshes
-	// Template type, template name, mesh name
-	EntityManager.CreateTemplate("Scenery", "Skybox", "Skybox.x");
-	EntityManager.CreateTemplate("Scenery", "Floor", "Floor.x");
-	EntityManager.CreateTemplate("Scenery", "Building", "Building.x");
-	EntityManager.CreateTemplate("Scenery", "Tree", "Tree1.x");
-
-	// Creates scenery entities
-	// Type (template name), entity name, position, rotation, scale
-	EntityManager.CreateEntity("Skybox", "Skybox", CVector3(0.0f, -10000.0f, 0.0f), CVector3::kZero, CVector3(10, 10, 10));
-	EntityManager.CreateEntity("Floor", "Floor");
-	EntityManager.CreateEntity("Building", "Building", CVector3(0.0f, 0.0f, 40.0f));
 	for (int tree = 0; tree < 100; ++tree)
 	{
 		// Some random trees
@@ -131,38 +122,6 @@ bool SceneSetup()
 			                        CVector3(Random(-200.0f, 30.0f), 0.0f, Random(40.0f, 150.0f)),
 			                        CVector3(0.0f, Random(0.0f, 2.0f * kfPi), 0.0f) );
 	}
-
-
-	/////////////////////////////////
-	// Create tank templates
-
-	// Template type, template name, mesh name, top speed, acceleration, tank turn speed, turret
-	// turn speed, max HP and shell damage. These latter settings are for advanced requirements only
-	EntityManager.CreateTankTemplate("Tank", "Rogue Scout", "HoverTank02.x",
-		24.0f, 2.2f, 2.0f, kfPi / 3, 100, 20);
-	EntityManager.CreateTankTemplate("Tank", "Oberon MkII", "HoverTank07.x",
-		18.0f, 1.6f, 1.3f, kfPi / 4, 120, 35);
-
-	// Template for tank shell
-	EntityManager.CreateTemplate("Projectile", "Shell Type 1", "Bullet.x");
-
-
-	////////////////////////////////
-	// Create tank entities
-
-	// Type (template name), team number, tank name, position, rotation
-	TankA = EntityManager.CreateTank("Rogue Scout", 0, "A-1", CVector3(-20.0f, 0.5f, -20.0f),
-		CVector3(0.0f, ToRadians(0.0f), 0.0f));
-	TankB = EntityManager.CreateTank("Oberon MkII", 1, "B-1", CVector3(20.0f, 0.5f, 20.0f),
-		CVector3(0.0f, ToRadians(180.0f), 0.0f));
-	TankC = EntityManager.CreateTank("Rogue Scout", 0, "A-2", CVector3(-40.0f, 0.5f, -20.0f),
-		CVector3(0.0f, ToRadians(0.0f), 0.0f));
-	TankD = EntityManager.CreateTank("Oberon MkII", 1, "B-2", CVector3(40.0f, 0.5f, 20.0f),
-		CVector3(0.0f, ToRadians(180.0f), 0.0f));
-	TankE = EntityManager.CreateTank("Rogue Scout", 0, "A-3", CVector3(-60.0f, 0.5f, -20.0f),
-		CVector3(0.0f, ToRadians(0.0f), 0.0f));
-	TankF = EntityManager.CreateTank("Oberon MkII", 1, "B-3", CVector3(60.0f, 0.5f, 20.0f),
-		CVector3(0.0f, ToRadians(180.0f), 0.0f));
 
 	/////////////////////////////
 	// Camera / light setup
@@ -296,40 +255,45 @@ void RenderSceneText( float updateTime )
 	}
 
 	//Picking
-	if (!grabbedTank)
-	{
-		CVector2 MousePixel = { TFloat32(MouseX),TFloat32(MouseY) };
-
-		EntityManager.BeginEnumEntities("", "", "Tank");
-		CEntity* entity;
-		while (entity = EntityManager.EnumEntity())
-		{
-			if (NearestEntity == 0)
-			{
-				NearestEntityDistance = 9999999;
-			}
-			else
-			{
-				if (NearestEntity)			
-				{
-					TInt32 x, y = 0;
-					MainCamera->PixelFromWorldPt(NearestEntity->Position(), ViewportWidth, ViewportHeight, &x, &y);
-					CVector2 nearestEntityPos2D = { TFloat32(x),TFloat32(y) };
-					NearestEntityDistance = Distance(MousePixel, nearestEntityPos2D);
-				}		
-			}
-			TInt32 x, y = 0;
-			MainCamera->PixelFromWorldPt(entity->Position(), ViewportWidth, ViewportHeight, &x, &y);
-			CVector2 entityPos2D = { TFloat32(x),TFloat32(y) };
-			auto currentEntityDistance = Distance(MousePixel, entityPos2D);
-			if (currentEntityDistance < NearestEntityDistance)
-			{
-				NearestEntity = entity;
-			}
-		}
-		EntityManager.EndEnumEntities();
-	}
 	
+	
+	if (!chaseCamera)
+	{
+		if (!grabbedTank)
+		{
+			CVector2 MousePixel = { TFloat32(MouseX),TFloat32(MouseY) };
+
+			EntityManager.BeginEnumEntities("", "", "Tank");
+			CEntity* entity;
+			while (entity = EntityManager.EnumEntity())
+			{
+				if (NearestEntity == 0)
+				{
+					NearestEntityDistance = 9999999;
+				}
+				else
+				{
+					if (NearestEntity)
+					{
+						TInt32 x, y = 0;
+						MainCamera->PixelFromWorldPt(NearestEntity->Position(), ViewportWidth, ViewportHeight, &x, &y);
+						CVector2 nearestEntityPos2D = { TFloat32(x),TFloat32(y) };
+						NearestEntityDistance = Distance(MousePixel, nearestEntityPos2D);
+					}
+				}
+				TInt32 x, y = 0;
+				MainCamera->PixelFromWorldPt(entity->Position(), ViewportWidth, ViewportHeight, &x, &y);
+				CVector2 entityPos2D = { TFloat32(x),TFloat32(y) };
+				auto currentEntityDistance = Distance(MousePixel, entityPos2D);
+				if (currentEntityDistance < NearestEntityDistance)
+				{
+					NearestEntity = entity;
+				}
+			}
+			EntityManager.EndEnumEntities();
+		}
+	}
+
 	EntityManager.BeginEnumEntities("", "", "Tank");
 	CEntity* entity = 0;
 	while (entity = EntityManager.EnumEntity())
@@ -434,9 +398,33 @@ void UpdateScene( float updateTime )
 			Messenger.SendMessageA(NearestEntity->GetUID(), msg);
 		}
 	}
-	// Move the camera
-	MainCamera->Control( Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D, 
-	                     CameraMoveSpeed * updateTime, CameraRotSpeed * updateTime );
+	if (KeyHit(Mouse_RButton))
+	{
+		if (chaseCamera)
+		{
+			chaseCamera = false;
+		}
+		else
+		{
+			chaseCamera = true;
+		}
+	}
+
+	if (chaseCamera)
+	{
+		// Take camera position from player, moved backwards and upwards
+		MainCamera->Position() = NearestEntity->Position() - NearestEntity->Matrix().ZAxis() * 12.0f +
+			NearestEntity->Matrix().YAxis() * 5.0f;
+		// Face camera towards point above player
+		MainCamera->Matrix().FaceTarget(NearestEntity->Position() + CVector3(0, 3.0f, 0));
+	}
+	else
+	{
+		// Move the camera
+		MainCamera->Control(Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D,
+			CameraMoveSpeed * updateTime, CameraRotSpeed * updateTime);
+	}
+
 }
 
 

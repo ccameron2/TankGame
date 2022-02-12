@@ -19,6 +19,9 @@
     <Filter Include="Math">
       <UniqueIdentifier>{7424d7d2-c818-4117-bbab-d74c82b531aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XML">
+      <UniqueIdentifier>{60113e16-8678-4fd6-a248-9c0f01a41dd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Scene\Camera.cpp">
@@ -100,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\TankEntity.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\XML\CParseLevel.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\XML\tinyxml2.cpp">
+      <Filter>XML</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +205,12 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\TankEntity.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\XML\CParseLevel.h">
+      <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\XML\tinyxml2.h">
+      <Filter>XML</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
