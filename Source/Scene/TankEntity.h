@@ -248,10 +248,10 @@ private:
 
 	CTimer timer;
 	int m_ShellCount = 0;
-	bool positionChosen = false;
-	CEntity* nearestEnemyTank = 0;
+	TEntityUID nearestEnemyTank = 0;
 	TFloat32 nearestTankDistance;
 	TEntityUID tankToHelp = 0;
 	bool timerStarted = false;
+	int viewDistance = 75;
 };
 } // namespace gen

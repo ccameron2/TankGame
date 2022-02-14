@@ -87,7 +87,7 @@ int NumUpdateTimes = 0;
 float AverageUpdateTime = -1.0f; // Invalid value at first
 
 //Picking
-CEntity* NearestEntity;
+TEntityUID NearestTankEntity;
 float NearestEntityDistance;
 
 bool toggleExtendedInfo = true;
@@ -96,7 +96,7 @@ int pickDist = 50;
 
 //Chase camera
 bool chaseCamera = false;
-CEntity* chasedTank;
+TEntityUID chasedTank;
 
 //The program insists on clicking once when run?
 bool whyisthishappening = false;
@@ -267,19 +267,20 @@ void RenderSceneText( float updateTime )
 			CEntity* entity;
 			while (entity = EntityManager.EnumEntity())
 			{
-				if (NearestEntity == 0)
+				if (EntityManager.GetEntity(NearestTankEntity) == 0)
+				{
+					NearestTankEntity = 0;
+				}
+				if (NearestTankEntity == 0)
 				{
 					NearestEntityDistance = 9999999;
 				}
 				else
 				{
-					if (NearestEntity)
-					{
-						TInt32 x, y = 0;
-						MainCamera->PixelFromWorldPt(NearestEntity->Position(), ViewportWidth, ViewportHeight, &x, &y);
-						CVector2 nearestEntityPos2D = { TFloat32(x),TFloat32(y) };
-						NearestEntityDistance = Distance(MousePixel, nearestEntityPos2D);
-					}
+					TInt32 x, y = 0;
+					MainCamera->PixelFromWorldPt(EntityManager.GetEntity(NearestTankEntity)->Position(), ViewportWidth, ViewportHeight, &x, &y);
+					CVector2 nearestEntityPos2D = { TFloat32(x),TFloat32(y) };
+					NearestEntityDistance = Distance(MousePixel, nearestEntityPos2D);
 				}
 				TInt32 x, y = 0;
 				MainCamera->PixelFromWorldPt(entity->Position(), ViewportWidth, ViewportHeight, &x, &y);
@@ -287,7 +288,7 @@ void RenderSceneText( float updateTime )
 				auto currentEntityDistance = Distance(MousePixel, entityPos2D);
 				if (currentEntityDistance < NearestEntityDistance)
 				{
-					NearestEntity = entity;
+					NearestTankEntity = entity->GetUID();
 				}
 			}
 			EntityManager.EndEnumEntities();
@@ -311,7 +312,7 @@ void RenderSceneText( float updateTime )
 						<< tankEntity->GetState() << " "
 						<< tankEntity->GetShellCount();
 				}
-				if (tankEntity == NearestEntity) 
+				if (tankEntity->GetUID() == NearestTankEntity)
 				{ 
 					if (!grabbedTank) { RenderText(outText.str(), X, Y, 1.0f, 1.0f, 0.0f, true); }
 					else { RenderText(outText.str(), X, Y, 1.0f, 0.0f, 0.0f, true); }
@@ -332,6 +333,8 @@ void UpdateScene( float updateTime )
 {
 	// Call all entity update functions
 	EntityManager.UpdateAllEntities( updateTime );
+
+	CEntity* nearestEntity = EntityManager.GetEntity(NearestTankEntity);
 
 	// Set camera speeds
 	// Key F1 used for full screen toggle
@@ -385,8 +388,8 @@ void UpdateScene( float updateTime )
 				auto direction = worldPt - MainCamera->Position();
 				direction.Normalise();
 				auto newPosition = worldPt + pickDist * direction;
-				NearestEntity->Position().x = newPosition.x;
-				NearestEntity->Position().z = newPosition.z;
+				nearestEntity->Position().x = newPosition.x;
+				nearestEntity->Position().z = newPosition.z;
 				grabbedTank = false;
 			}
 			else
@@ -395,7 +398,7 @@ void UpdateScene( float updateTime )
 			}
 			SMessage msg;
 			msg.type = Msg_Start;
-			Messenger.SendMessageA(NearestEntity->GetUID(), msg);
+			Messenger.SendMessageA(nearestEntity->GetUID(), msg);
 		}
 	}
 	if (KeyHit(Mouse_RButton))
@@ -413,10 +416,10 @@ void UpdateScene( float updateTime )
 	if (chaseCamera)
 	{
 		// Take camera position from player, moved backwards and upwards
-		MainCamera->Position() = NearestEntity->Position() - NearestEntity->Matrix().ZAxis() * 12.0f +
-			NearestEntity->Matrix().YAxis() * 5.0f;
+		MainCamera->Position() = nearestEntity->Position() - nearestEntity->Matrix().ZAxis() * 12.0f +
+			nearestEntity->Matrix().YAxis() * 5.0f;
 		// Face camera towards point above player
-		MainCamera->Matrix().FaceTarget(NearestEntity->Position() + CVector3(0, 3.0f, 0));
+		MainCamera->Matrix().FaceTarget(nearestEntity->Position() + CVector3(0, 3.0f, 0));
 	}
 	else
 	{

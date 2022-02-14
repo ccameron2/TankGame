@@ -120,19 +120,16 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				}
 				break;
 			case Msg_Evade:
+				evadePosition = Position() + CVector3{ float(Random(1,40)), 0, float(Random(1,40)) };
 				m_State = Evade;
 				break;
 			case Msg_Help:
 				tankToHelp = msg.from;
 				if (EntityManager.GetEntity(tankToHelp))
 				{
-					if (Distance(Position(), EntityManager.GetEntity(tankToHelp)->Position()) < 50)
+					if (Distance(Position(), EntityManager.GetEntity(tankToHelp)->Position()) < viewDistance)
 					{
 						m_State = Aim;
-					}
-					else
-					{
-						m_State = Patrol;
 					}
 				}				
 				break;
@@ -180,9 +177,9 @@ bool CTankEntity::Update( TFloat32 updateTime )
 
 		if (timer.GetTime() < 1)
 		{			
-			if (!IsLookingAtEnemy(ToRadians(4)))
+			if (!IsLookingAtEnemy(ToRadians(2)))
 			{			
-				Matrix(2).RotateY(0.02);
+				Matrix(2).RotateY(0.015);
 			}	
 		}
 		else
@@ -190,22 +187,20 @@ bool CTankEntity::Update( TFloat32 updateTime )
 			timer.Stop();
 			timerStarted = false;
 			timer.Reset();
+
 			//Fire a shell and change to evade state
 			CVector3 turretRotation;
 			(Matrix(0) * Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
-			EntityManager.CreateShell("Shell Type 1","", Position(),turretRotation,{1,1,1}, m_Team);
-			m_ShellCount++;			
-			m_State = Evade;
+			EntityManager.CreateShell("Shell Type 1", "", Position(), turretRotation, { 1,1,1 }, m_Team);
+			m_ShellCount++;
+			SMessage msg;
+			msg.type = Msg_Evade;
+			Messenger.SendMessageA(GetUID(), msg);	
 		}
 	}
 	else if (m_State == Evade)
 	{
 		m_Speed = 10;
-		if (!positionChosen)
-		{
-			evadePosition = Position() + CVector3{ float(Random(1,40)), 0, float(Random(1,40)) };
-			positionChosen = true;
-		}
 		Matrix(0).FaceTarget(evadePosition);
 		CVector3 bodyRotation;
 		Matrix(0).DecomposeAffineEuler(NULL, &bodyRotation, NULL);
@@ -221,7 +216,6 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		}
 		if (Distance(Position(), evadePosition) < 2.0f)
 		{
-			positionChosen = false;
 			m_State = Patrol;
 		}
 
@@ -249,20 +243,16 @@ bool CTankEntity::IsLookingAtEnemy(float targetAngle)
 	FindNearestTank();
 
 	CMatrix4x4 turretWorldMatrix = Matrix(2) * Matrix();
-	CVector3 targetPosition;
 
-	if (nearestEnemyTank)
+	CVector3 targetPosition = EntityManager.GetEntity(nearestEnemyTank)->Matrix().Position();
+	auto distanceVector = targetPosition - Position();
+	distanceVector.Normalise();
+	auto turretFacingVector = turretWorldMatrix.ZAxis();
+	turretFacingVector.Normalise();
+	auto dot = distanceVector.Dot(turretFacingVector);
+	if (acos(dot) <= targetAngle)
 	{
-		targetPosition = nearestEnemyTank->Matrix().Position();
-		auto distanceVector = targetPosition - Position();
-		distanceVector.Normalise();
-		auto turretFacingVector = turretWorldMatrix.ZAxis();
-		turretFacingVector.Normalise();
-		auto dot = distanceVector.Dot(turretFacingVector);
-		if (acos(dot) <= targetAngle)
-		{
-			return true;
-		}
+		return true;
 	}
 	return false;
 
@@ -277,21 +267,25 @@ void CTankEntity::FindNearestTank()
 		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
 		if (tankEntity->GetTeam() != m_Team)
 		{
+			if (EntityManager.GetEntity(nearestEnemyTank) == 0)
+			{
+				nearestEnemyTank = 0;
+			}
 			if (nearestEnemyTank == 0)
 			{
 				nearestTankDistance = 9999999;
 			}
 			else
 			{
-				if (nearestEnemyTank)
-				{
-					nearestTankDistance = Distance(Position(), nearestEnemyTank->Position());
-				}
+				nearestTankDistance = Distance(Position(), EntityManager.GetEntity(nearestEnemyTank)->Position());
 			}
 			auto tankDistance = Distance(Position(), tankEntity->Position());
-			if (tankDistance < nearestTankDistance)
+			if (Distance(Position(), tankEntity->Position()) < viewDistance)
 			{
-				nearestEnemyTank = entity;
+				if (tankDistance < nearestTankDistance)
+				{
+					nearestEnemyTank = entity->GetUID();
+				}
 			}
 		}
 	}
