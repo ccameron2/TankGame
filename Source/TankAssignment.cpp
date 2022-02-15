@@ -110,7 +110,7 @@ bool SceneSetup()
 {
 	//////////////////////////////////////////////
 	// Prepare render methods
-
+	InitInput();
 	InitialiseMethods();
 
 	LevelParser.ParseFile("Entities.xml");
@@ -376,30 +376,24 @@ void UpdateScene( float updateTime )
 	}
 	if (KeyHit(Mouse_LButton))
 	{
-		if (!whyisthishappening)
+		if (grabbedTank)
 		{
-			whyisthishappening = true;
+			auto worldPt = MainCamera->WorldPtFromPixel(MouseX, MouseY, ViewportWidth, ViewportHeight);
+			auto direction = worldPt - MainCamera->Position();
+			direction.Normalise();
+			auto newPosition = worldPt + pickDist * direction;
+			nearestEntity->Position().x = newPosition.x;
+			nearestEntity->Position().z = newPosition.z;
+			grabbedTank = false;
 		}
 		else
 		{
-			if (grabbedTank)
-			{
-				auto worldPt = MainCamera->WorldPtFromPixel(MouseX, MouseY, ViewportWidth, ViewportHeight);
-				auto direction = worldPt - MainCamera->Position();
-				direction.Normalise();
-				auto newPosition = worldPt + pickDist * direction;
-				nearestEntity->Position().x = newPosition.x;
-				nearestEntity->Position().z = newPosition.z;
-				grabbedTank = false;
-			}
-			else
-			{
-				grabbedTank = true;
-			}
-			SMessage msg;
-			msg.type = Msg_Start;
-			Messenger.SendMessageA(nearestEntity->GetUID(), msg);
+			grabbedTank = true;
 		}
+		SMessage msg;
+		msg.type = Msg_Start;
+		Messenger.SendMessageA(nearestEntity->GetUID(), msg);
+
 	}
 	if (KeyHit(Mouse_RButton))
 	{
