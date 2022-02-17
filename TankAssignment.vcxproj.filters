@@ -110,6 +110,9 @@
     <ClCompile Include="Source\XML\tinyxml2.cpp">
       <Filter>XML</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\AmmoEntity.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Scene\Camera.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="Source\XML\tinyxml2.h">
       <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\AmmoEntity.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

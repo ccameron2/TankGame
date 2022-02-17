@@ -174,6 +174,10 @@ public:
 		{
 			return "Evade";
 		}
+		else if (m_State == 4)
+		{
+			return "Empty";
+		}
 		else
 		{
 			return "Error";
@@ -202,6 +206,8 @@ public:
 	bool IsLookingAtEnemy(float targetAngle);
 
 	void FindNearestTank();
+
+	void FindNearestAmmo();
 	
 
 /////////////////////////////////////
@@ -216,7 +222,8 @@ private:
 		Inactive,
 		Patrol,
 		Aim,
-		Evade
+		Evade,
+		Empty
 	};
 	/////////////////////////////////////
 	// Data
@@ -252,6 +259,9 @@ private:
 	TFloat32 nearestTankDistance;
 	TEntityUID tankToHelp = 0;
 	bool timerStarted = false;
-	int viewDistance = 75;
+	int viewDistance = 100;
+	int ammunition = 10;
+	TEntityUID nearestAmmo = 0;
+	TFloat32 nearestAmmoDistance;
 };
 } // namespace gen

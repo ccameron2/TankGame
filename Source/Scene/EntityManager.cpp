@@ -199,6 +199,29 @@ TEntityUID CEntityManager::CreateShell
 	return m_NextUID++;
 }
 
+TEntityUID CEntityManager::CreateAmmo(const string& templateName, const string& name, const CVector3& position, const CVector3& rotation, const CVector3& scale, const int team)
+{
+	// Get template associated with the template name
+	CEntityTemplate* entityTemplate = GetTemplate(templateName);
+
+	// Create new shell entity with next UID
+	CEntity* newEntity = new CAmmoEntity(entityTemplate, m_NextUID,
+		name, position, rotation, scale, team);
+
+	// Get vector index for new entity and add it to vector
+	TUInt32 entityIndex = static_cast<int>(m_Entities.size());
+	m_Entities.push_back(newEntity);
+
+	// Add mapping from UID to entity index into hash map
+	m_EntityUIDMap->SetKeyValue(m_NextUID, entityIndex);
+
+	m_IsEnumerating = false; // Cancel any entity enumeration (entity list has changed)
+
+							 // Return UID of new entity then increase it ready for next entity
+	return m_NextUID++;
+	return TEntityUID();
+}
+
 
 // Destroy the given entity - returns true if the entity existed and was destroyed
 bool CEntityManager::DestroyEntity( TEntityUID UID )

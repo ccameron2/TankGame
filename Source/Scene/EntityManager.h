@@ -15,6 +15,7 @@ using namespace std;
 #include "Entity.h"
 #include "TankEntity.h"
 #include "ShellEntity.h"
+#include "AmmoEntity.h"
 #include "Camera.h"
 
 namespace gen
@@ -103,6 +104,19 @@ public:
 		const CVector3& scale = CVector3(1.0f, 1.0f, 1.0f),
 		const int		team = 0
 	);
+
+	// Create a shell, requires a shell template name, may supply entity name and position
+	// Returns the UID of the new entity
+	TEntityUID CreateAmmo
+	(
+		const string& templateName,
+		const string& name = "",
+		const CVector3& position = CVector3::kOrigin,
+		const CVector3& rotation = CVector3(0.0f, 0.0f, 0.0f),
+		const CVector3& scale = CVector3(1.0f, 1.0f, 1.0f),
+		const int		team = 0
+	);
+
 
 
 	// Destroy the given entity - returns true if the entity existed and was destroyed

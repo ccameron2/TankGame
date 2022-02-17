@@ -66,19 +66,12 @@ extern CMessenger Messenger;
 CEntityManager EntityManager;
 CParseLevel LevelParser(&EntityManager);
 
-// Tank UIDs
-TEntityUID TankA;
-TEntityUID TankB;
-TEntityUID TankC;
-TEntityUID TankD;
-TEntityUID TankE;
-TEntityUID TankF;
-
 // Other scene elements
 const int NumLights = 2;
 CLight*  Lights[NumLights];
 SColourRGBA AmbientLight;
 CCamera* MainCamera;
+int treeNum = 100;
 
 // Sum of recent update times and number of times in the sum - used to calculate
 // average over a given time period
@@ -98,8 +91,11 @@ int pickDist = 50;
 bool chaseCamera = false;
 TEntityUID chasedTank;
 
-//The program insists on clicking once when run?
-bool whyisthishappening = false;
+//Ammo
+CTimer ammoTimer;
+bool ammoTimerStarted = true;
+int ammoTimerDuration = 0;
+
 
 //-----------------------------------------------------------------------------
 // Scene management
@@ -115,7 +111,13 @@ bool SceneSetup()
 
 	LevelParser.ParseFile("Entities.xml");
 
-	EntityManager.BeginEnumEntities("Tree", "Tree", "Scenery");
+
+	for (int i = 0; i < treeNum; i++)
+	{
+		EntityManager.CreateEntity("Tree", "Tree " + to_string(i));
+	}
+
+	EntityManager.BeginEnumEntities("", "Tree", "Scenery");
 	CEntity* entity = 0;
 	while (entity = EntityManager.EnumEntity())
 	{
@@ -167,10 +169,10 @@ void SceneShutdown()
 //-----------------------------------------------------------------------------
 
 // Get UID of tank A (team 0) or B (team 1)
-TEntityUID GetTankUID(int team)
-{
-	return (team == 0) ? TankA : TankB;
-}
+//TEntityUID GetTankUID(int team)
+//{
+//	return (team == 0) ? TankA : TankB;
+//}
 
 
 //-----------------------------------------------------------------------------
@@ -349,6 +351,7 @@ void UpdateScene( float updateTime )
 			SMessage msg;
 			msg.type = Msg_Start;
 			Messenger.SendMessageA(entity->GetUID(), msg);
+			ammoTimerStarted = false;
 		}
 
 	}
@@ -420,6 +423,22 @@ void UpdateScene( float updateTime )
 		// Move the camera
 		MainCamera->Control(Key_Up, Key_Down, Key_Left, Key_Right, Key_W, Key_S, Key_A, Key_D,
 			CameraMoveSpeed * updateTime, CameraRotSpeed * updateTime);
+	}
+
+	if (!ammoTimerStarted)
+	{
+		ammoTimer.Start();
+		ammoTimerDuration = Random(5, 15);
+		ammoTimerStarted = true;
+	}
+
+	if (ammoTimer.GetTime() > ammoTimerDuration)
+	{
+		ammoTimer.Reset();
+		ammoTimerStarted = false;
+		ammoTimerDuration = 0;
+		auto newAmmoUID = EntityManager.CreateAmmo("Ammo", "Ammo", CVector3(Random(-100.0f, 100.0f), 50.0f, Random(-100.0f, 100.0f)));
+		EntityManager.GetEntity(newAmmoUID)->Matrix().Scale({ 0.5,0.5,0.5 });
 	}
 
 }

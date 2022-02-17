@@ -201,6 +201,7 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		{
 			gen::MouseX = MAKEPOINTS(lParam).x; 
 			gen::MouseY = MAKEPOINTS(lParam).y;
+			break;
 		}
 		case WM_LBUTTONDOWN:
 		{

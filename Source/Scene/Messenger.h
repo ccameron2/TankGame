@@ -26,7 +26,8 @@ enum EMessageType
 	Msg_Start,
 	Msg_Hit,
 	Msg_Evade,
-	Msg_Help
+	Msg_Help,
+	Msg_Collected
 };
 
 // A message contains a type and the UID that sent it.
