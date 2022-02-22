@@ -131,9 +131,13 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				tankToHelp = msg.from;
 				if (EntityManager.GetEntity(tankToHelp))
 				{
-					if (Distance(Position(), EntityManager.GetEntity(tankToHelp)->Position()) < viewDistance)
+					CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(tankToHelp));
+					if (tankEntity->IsLookingAtEnemy(ToRadians(15)))
 					{
-						m_State = Aim;
+						if (Distance(Position(), EntityManager.GetEntity(tankToHelp)->Position()) < viewDistance)
+						{
+							m_State = Aim;
+						}
 					}
 				}				
 				break;
@@ -191,10 +195,6 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				{
 					correctAim = true;
 				}
-			}
-			else
-			{
-				m_State = Evade;
 			}
 
 		}
