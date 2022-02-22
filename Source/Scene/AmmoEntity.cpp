@@ -36,7 +36,7 @@ namespace gen
 			}
 		}
 
-		if (Position().y > 1)
+		if (Position().y > 0)
 		{
 			Matrix().MoveLocalY(-0.1);
 		}

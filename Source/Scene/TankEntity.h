@@ -178,6 +178,10 @@ public:
 		{
 			return "Empty";
 		}
+		else if (m_State == 5)
+		{
+			return "Dead";
+		}
 		else
 		{
 			return "Error";
@@ -223,7 +227,8 @@ private:
 		Patrol,
 		Aim,
 		Evade,
-		Empty
+		Empty,
+		Dead
 	};
 	/////////////////////////////////////
 	// Data
@@ -263,5 +268,7 @@ private:
 	int ammunition = 10;
 	TEntityUID nearestAmmo = 0;
 	TFloat32 nearestAmmoDistance;
+	bool broken = false;
+	bool correctAim = false;
 };
 } // namespace gen

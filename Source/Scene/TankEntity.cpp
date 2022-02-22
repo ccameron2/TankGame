@@ -113,10 +113,14 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				while (entity = EntityManager.EnumEntity())
 				{
 					CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
-					SMessage msg;
-					msg.from = GetUID();
-					msg.type = Msg_Help;
-					Messenger.SendMessageA(entity->GetUID(), msg);
+					if (tankEntity->GetState() != "Dead" && tankEntity->IsLookingAtEnemy(ToRadians(15)))
+					{
+						SMessage msg;
+						msg.from = GetUID();
+						msg.type = Msg_Help;
+						Messenger.SendMessageA(entity->GetUID(), msg);
+					}
+					
 				}
 				break;
 			case Msg_Evade:
@@ -176,17 +180,30 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		m_Speed = 0;
 
 		if (timer.GetTime() < 1)
-		{			
-			if (!IsLookingAtEnemy(ToRadians(2)))
-			{			
-				Matrix(2).RotateY(0.015);
-			}	
+		{	
+			if (IsLookingAtEnemy(ToRadians(15)))
+			{
+				if (!IsLookingAtEnemy(ToRadians(1)) && !correctAim)
+				{
+					Matrix(2).RotateY(0.015);
+				}
+				else
+				{
+					correctAim = true;
+				}
+			}
+			else
+			{
+				m_State = Evade;
+			}
+
 		}
 		else
 		{
 			timer.Stop();
 			timerStarted = false;
 			timer.Reset();
+			correctAim = false;
 
 			//Fire a shell and change to evade state
 			CVector3 turretRotation;
@@ -229,7 +246,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		}
 
 	}
-	else if (m_State = Empty)
+	else if (m_State == Empty)
 	{
 		m_Speed = 0;
 		FindNearestAmmo();
@@ -256,6 +273,19 @@ bool CTankEntity::Update( TFloat32 updateTime )
 			}				
 		}		
 	}
+	else if (m_State == Dead)
+	{
+		m_Speed = 0;
+		if (!broken)
+		{
+			Matrix(0).RotateX(ToRadians(Random(45,90)));
+			Matrix(0).RotateY(ToRadians(Random(45, 90)));
+			Matrix(0).RotateZ(ToRadians(Random(45, 90)));
+			Position() -= {0, 1, 0};
+			broken = true;
+		}
+		
+	}
 	else
 	{
 		m_Speed = 0;
@@ -264,7 +294,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 
 	if (m_HP <= 0)
 	{
-		return false;
+		m_State = Dead;
 	}
 
 	// Perform movement...
@@ -309,7 +339,7 @@ void CTankEntity::FindNearestTank()
 	while (entity = EntityManager.EnumEntity())
 	{
 		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
-		if (tankEntity->GetTeam() != m_Team)
+		if (tankEntity->GetTeam() != m_Team && tankEntity->GetState() != "Dead")
 		{
 			if (EntityManager.GetEntity(nearestEnemyTank) == 0)
 			{

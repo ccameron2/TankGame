@@ -3,59 +3,21 @@ i:{00000000-0000-0000-0000-000000000000}:TankAssignment.sln
 ++TankAssignment
 i:{00000000-0000-0000-0000-000000000000}:TankAssignment
 ++References
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:{49F45200-991B-4BFA-B8B8-C6A1E0129EF9}
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:{7EEB609D-5AC3-4E9A-87DC-2061E01CFD19}
 ++External Dependencies
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:{F7FCA911-7AE0-4E7E-B83C-5BB3B34DFF77}
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:{6625EBEF-D1AE-4F89-9F2F-22F87BF6E5F8}
 ++Common
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:Common
 ++Math
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:Math
-++BaseMath.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\BaseMath.cpp
-++BaseMath.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\BaseMath.h
-++CMatrix2x2.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix2x2.cpp
-++CMatrix2x2.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix2x2.h
-++CMatrix3x3.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix3x3.cpp
-++CMatrix3x3.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix3x3.h
-++CMatrix4x4.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix4x4.cpp
-++CMatrix4x4.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix4x4.h
-++CQuaternion.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CQuaternion.cpp
-++CQuaternion.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CQuaternion.h
-++CQuatTransform.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CQuatTransform.cpp
-++CQuatTransform.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CQuatTransform.h
-++CVector2.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector2.cpp
-++CVector2.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector2.h
-++CVector3.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector3.cpp
-++CVector3.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector3.h
-++CVector4.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector4.cpp
-++CVector4.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector4.h
-++MathDX.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\MathDX.h
-++MathIO.cpp
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\MathIO.cpp
-++MathIO.h
-i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\MathIO.h
 ++Render
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:Render
 ++Scene
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:Scene
+++AmmoEntity.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Scene\AmmoEntity.cpp
+++AmmoEntity.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Scene\AmmoEntity.h
 ++Camera.cpp
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Scene\Camera.cpp
 ++Camera.h
@@ -92,6 +54,16 @@ i:{3a68081d-e8f9-4523-9436-530de9e5530c}:UI
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\UI\Input.cpp
 ++Input.h
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\UI\Input.h
+++XML
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:XML
+++CParseLevel.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\XML\CParseLevel.cpp
+++CParseLevel.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\XML\CParseLevel.h
+++tinyxml2.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\XML\tinyxml2.cpp
+++tinyxml2.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\XML\tinyxml2.h
 ++MainApp.cpp
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\MainApp.cpp
 ++TankAssignment.cpp
@@ -120,6 +92,8 @@ e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDI
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\INCLUDE\ARM64INTR.H
 ++armintr.h
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\INCLUDE\ARMINTR.H
+++assert.h
+e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\UCRT\ASSERT.H
 ++atlalloc.h
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\ATLMFC\INCLUDE\ATLALLOC.H
 ++atlbase.h
@@ -258,6 +232,8 @@ e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\UCRT\CRTDBG.H
 ++crtdefs.h
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\INCLUDE\CRTDEFS.H
+++cstdarg
+e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\INCLUDE\CSTDARG
 ++cstddef
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\INCLUDE\CSTDDEF
 ++cstdint
@@ -280,8 +256,8 @@ e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDI
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\SHARED\D3D9.H
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\MICROSOFT DIRECTX SDK (JUNE 2010)\INCLUDE\D3D9.H
 ++d3d9caps.h
-e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\MICROSOFT DIRECTX SDK (JUNE 2010)\INCLUDE\D3D9CAPS.H
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\SHARED\D3D9CAPS.H
+e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\MICROSOFT DIRECTX SDK (JUNE 2010)\INCLUDE\D3D9CAPS.H
 ++d3d9types.h
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\SHARED\D3D9TYPES.H
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\MICROSOFT DIRECTX SDK (JUNE 2010)\INCLUDE\D3D9TYPES.H
@@ -294,8 +270,8 @@ e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\
 ++D3D10effect.h
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\MICROSOFT DIRECTX SDK (JUNE 2010)\INCLUDE\D3D10EFFECT.H
 ++d3d10misc.h
-e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\MICROSOFT DIRECTX SDK (JUNE 2010)\INCLUDE\D3D10MISC.H
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\UM\D3D10MISC.H
+e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\MICROSOFT DIRECTX SDK (JUNE 2010)\INCLUDE\D3D10MISC.H
 ++d3d10sdklayers.h
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\MICROSOFT DIRECTX SDK (JUNE 2010)\INCLUDE\D3D10SDKLAYERS.H
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\UM\D3D10SDKLAYERS.H
@@ -398,8 +374,8 @@ e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\
 ++float.h
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\UCRT\FLOAT.H
 ++gcroot.h
-e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\INCLUDE\MSCLR\GCROOT.H
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\INCLUDE\GCROOT.H
+e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\2022\COMMUNITY\VC\TOOLS\MSVC\14.30.30705\INCLUDE\MSCLR\GCROOT.H
 ++guiddef.h
 e:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\PROGRAM FILES (X86)\WINDOWS KITS\10\INCLUDE\10.0.19041.0\SHARED\GUIDDEF.H
 ++handleapi.h
@@ -888,6 +864,48 @@ i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Common\Utility.cpp
 ++Utility.h
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Common\Utility.h
+++BaseMath.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\BaseMath.cpp
+++BaseMath.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\BaseMath.h
+++CMatrix2x2.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix2x2.cpp
+++CMatrix2x2.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix2x2.h
+++CMatrix3x3.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix3x3.cpp
+++CMatrix3x3.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix3x3.h
+++CMatrix4x4.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix4x4.cpp
+++CMatrix4x4.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CMatrix4x4.h
+++CQuaternion.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CQuaternion.cpp
+++CQuaternion.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CQuaternion.h
+++CQuatTransform.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CQuatTransform.cpp
+++CQuatTransform.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CQuatTransform.h
+++CVector2.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector2.cpp
+++CVector2.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector2.h
+++CVector3.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector3.cpp
+++CVector3.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector3.h
+++CVector4.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector4.cpp
+++CVector4.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\CVector4.h
+++MathDX.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\MathDX.h
+++MathIO.cpp
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\MathIO.cpp
+++MathIO.h
+i:{3a68081d-e8f9-4523-9436-530de9e5530c}:C:\Users\CCame\source\repos\GamesThree\Source\Math\MathIO.h
 ++Import
 i:{3a68081d-e8f9-4523-9436-530de9e5530c}:Render\Import
 ++Colour.h

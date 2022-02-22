@@ -89,7 +89,7 @@ bool CShellEntity::Update( TFloat32 updateTime )
 	while (entity = EntityManager.EnumEntity())
 	{
 		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
-		if (tankEntity->GetTeam() != m_Team)
+		if (tankEntity->GetTeam() != m_Team && tankEntity->GetState() != "Dead")
 		{
 			if (Distance(Position(), tankEntity->Position()) < 2.0f)
 			{
