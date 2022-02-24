@@ -415,6 +415,7 @@ void UpdateScene( float updateTime )
 			//Set new position
 			nearestEntity->Position().x = newPosition.x;
 			nearestEntity->Position().z = newPosition.z;
+			nearestEntity->Position().y = 1;
 
 			//Let go of the tank
 			GrabbedTank = false;

@@ -230,6 +230,7 @@ bool CParseLevel::ParseEntitiesElement(XMLElement* rootElement)
 			CVector3 pos{0, 0, 0};
 			CVector3 rot{0, 0, 0};
 			CVector3 scale{ 1, 1, 1 };
+			vector<CVector3> patrolPoints;
 
 			XMLElement* child = element->FirstChildElement("Position");
 			if (child != nullptr)  pos = GetVector3FromElement(child);
@@ -240,15 +241,17 @@ bool CParseLevel::ParseEntitiesElement(XMLElement* rootElement)
 			rot.y = ToRadians(rot.y);
 			rot.z = ToRadians(rot.z);
 
-			// TODO Same scaling code you wrote above (that was for planets, this bit is for ships)
-			//---->
 			child = element->FirstChildElement("Scale");
 			if (child != nullptr)  scale = GetVector3FromElement(child);
+
+
+			child = element->FirstChildElement("PatrolPoints");
+			if (child != nullptr) patrolPoints = GetListVector3FromElement(child);
 
 			// All data collected, create the entity, will allow any type of entity on a team
 			string templateType = m_EntityManager->GetTemplate(type)->GetType();
 			if (templateType == "Tank"  )
-				m_EntityManager->CreateTank(type, team, name, pos, rot, scale);
+				m_EntityManager->CreateTank(type, team, name, pos, rot, scale, patrolPoints);
 			else
 				m_EntityManager->CreateEntity(type, name, pos, rot, scale);
 
@@ -302,6 +305,51 @@ CVector3 CParseLevel::GetVector3FromElement(XMLElement* element)
 
 
 	return vector;
+}
+
+vector<CVector3> CParseLevel::GetListVector3FromElement(XMLElement* element)
+{
+	vector<CVector3> vectorList;
+	int length;
+	const XMLAttribute* attr = element->FindAttribute("N");
+	if (attr != nullptr) length = attr->IntValue();
+	for (int i = 0; i < length; i++)
+	{
+		CVector3 vector{ 0, 0, 0 };
+		const XMLAttribute* attr = element->FindAttribute("X");
+		if (attr != nullptr)  vector.x = attr->FloatValue();
+
+		attr = element->FindAttribute("Y");
+		if (attr != nullptr)  vector.y = attr->FloatValue();
+
+		attr = element->FindAttribute("Z");
+		if (attr != nullptr)  vector.z = attr->FloatValue();
+
+		vectorList.push_back(vector);
+	}
+	XMLElement* child = element->FirstChildElement("Randomise");
+	if (child != nullptr)
+	{
+		CVector3 random = { 0,0,0 };
+
+		attr = child->FindAttribute("X");
+		if (attr != nullptr)  random.x = attr->FloatValue() * 0.5f;
+
+		attr = child->FindAttribute("Y");
+		if (attr != nullptr)  random.y = attr->FloatValue() * 0.5f;
+
+		attr = child->FindAttribute("Z");
+		if (attr != nullptr)  random.z = attr->FloatValue() * 0.5f;
+
+		for (int i = 0; i < length; i++)
+		{
+			vectorList[i].x += Random(-random.x, random.x);
+			vectorList[i].y += Random(-random.y, random.y);
+			vectorList[i].z += Random(-random.z, random.z);
+		}
+
+	}
+	return vectorList;
 }
 
 

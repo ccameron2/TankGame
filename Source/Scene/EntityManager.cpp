@@ -143,7 +143,8 @@ TEntityUID CEntityManager::CreateTank
 	const string&   name /*= ""*/,
 	const CVector3& position /*= CVector3::kOrigin*/,
 	const CVector3& rotation /*= CVector3( 0.0f, 0.0f, 0.0f )*/,
-	const CVector3& scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/
+	const CVector3& scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/,
+	const vector<CVector3> patrolPoints
 	)
 {
 	// Get tank template associated with the template name
@@ -151,7 +152,7 @@ TEntityUID CEntityManager::CreateTank
 	CTankTemplate* tankTemplate = static_cast<CTankTemplate*>(GetTemplate(templateName));
 
 	// Create new tank entity with next UID
-	CEntity* newEntity = new CTankEntity(tankTemplate, m_NextUID, team, name, position, rotation, scale);
+	CEntity* newEntity = new CTankEntity(tankTemplate, m_NextUID, team, name, position, rotation, scale, patrolPoints);
 
 	// Get vector index for new entity and add it to vector
 	TUInt32 entityIndex = static_cast<int>(m_Entities.size());

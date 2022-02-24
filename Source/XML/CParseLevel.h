@@ -47,7 +47,7 @@ private:
 	bool ParseEntitiesElement (tinyxml2::XMLElement* rootElement);
 
 	CVector3 GetVector3FromElement(tinyxml2::XMLElement* rootElement);
-
+	vector<CVector3> GetListVector3FromElement(tinyxml2::XMLElement* rootElement);
 
 	/*---------------------------------------------------------------------------------------------
 		Data

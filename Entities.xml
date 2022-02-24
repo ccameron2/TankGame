@@ -13,12 +13,12 @@
     
 
     <!-- Tank Types -->
-    <EntityTemplate Type="Tank" Name="Rogue Scout" Mesh="HoverTank01.x" MaxSpeed = "24.0" Acceleration = "2.2" TurnSpeed = "2.0" TurretTurnSpeed = "0.79" MaxHP = "130" ShellDamage = "20"/>
-    <EntityTemplate Type="Tank" Name="Rogue Warrior" Mesh="HoverTank02.x" MaxSpeed = "18.0" Acceleration = "1.8" TurnSpeed = "1.3" TurretTurnSpeed = "1.04" MaxHP = "120" ShellDamage = "35"/>
-    <EntityTemplate Type="Tank" Name="Rogue Leader" Mesh="HoverTank03.x" MaxSpeed = "28.0" Acceleration = "2.4" TurnSpeed = "2.1" TurretTurnSpeed = "0.79" MaxHP = "150" ShellDamage = "30"/>
-    <EntityTemplate Type="Tank" Name="Oberon MkII" Mesh="HoverTank04.x" MaxSpeed = "14.0" Acceleration = "1.4" TurnSpeed = "1.4" TurretTurnSpeed = "1.04" MaxHP = "140" ShellDamage = "40"/>
-    <EntityTemplate Type="Tank" Name="Oberon MkIII" Mesh="HoverTank05.x" MaxSpeed = "26.0" Acceleration = "2.0" TurnSpeed = "2.2" TurretTurnSpeed = "0.79" MaxHP = "170" ShellDamage = "60"/>
-    <EntityTemplate Type="Tank" Name="Oberon MkIV" Mesh="HoverTank08.x" MaxSpeed = "20.0" Acceleration = "1.9" TurnSpeed = "1.5" TurretTurnSpeed = "1.04" MaxHP = "160" ShellDamage = "55"/>
+    <EntityTemplate Type="Tank" Name="Rogue Scout" Mesh="HoverTank01.x" MaxSpeed = "12.0" Acceleration = "2.2" TurnSpeed = "2.0" TurretTurnSpeed = "0.79" MaxHP = "130" ShellDamage = "20"/>
+    <EntityTemplate Type="Tank" Name="Rogue Warrior" Mesh="HoverTank02.x" MaxSpeed = "9.0" Acceleration = "1.8" TurnSpeed = "1.3" TurretTurnSpeed = "1.14" MaxHP = "120" ShellDamage = "35"/>
+    <EntityTemplate Type="Tank" Name="Rogue Leader" Mesh="HoverTank03.x" MaxSpeed = "14.0" Acceleration = "2.4" TurnSpeed = "2.1" TurretTurnSpeed = "0.59" MaxHP = "150" ShellDamage = "30"/>
+    <EntityTemplate Type="Tank" Name="Oberon MkII" Mesh="HoverTank04.x" MaxSpeed = "7.0" Acceleration = "1.4" TurnSpeed = "1.4" TurretTurnSpeed = "1.04" MaxHP = "140" ShellDamage = "40"/>
+    <EntityTemplate Type="Tank" Name="Oberon MkIII" Mesh="HoverTank05.x" MaxSpeed = "13.0" Acceleration = "2.0" TurnSpeed = "2.2" TurretTurnSpeed = "0.69" MaxHP = "170" ShellDamage = "60"/>
+    <EntityTemplate Type="Tank" Name="Oberon MkIV" Mesh="HoverTank08.x" MaxSpeed = "10.0" Acceleration = "1.9" TurnSpeed = "1.5" TurretTurnSpeed = "1.00" MaxHP = "160" ShellDamage = "55"/>
 
     <!-- Shell -->
     <EntityTemplate Type="Projectile" Name="Shell Type 1" Mesh="Bullet.x"/>
@@ -38,14 +38,23 @@
       <Entity Type="Rogue Scout" Name="A-1">
         <Position X="-20.0" Y="0.5" Z="-20.0"/>
         <Rotation X="0.0" Y="0.0" Z="-0.0"/>
+        <PatrolPoints N="8" X="-20.0" Y="0.5" Z="-20.0">
+          <Randomise X="40.0" Y="0" Z = "40.0"/>
+        </PatrolPoints>
       </Entity>
       <Entity Type="Rogue Warrior" Name="A-2">
         <Position X="-30.0" Y="0.5" Z="-20.0"/>
         <Rotation X="0.0" Y="0.0" Z="-0.0"/>
+        <PatrolPoints N="8" X="-30.0" Y="0.5" Z="-20.0">
+          <Randomise X="40.0" Y="0" Z = "40.0"/>
+        </PatrolPoints>
       </Entity>
       <Entity Type="Rogue Leader" Name="A-3">
         <Position X="-40.0" Y="0.5" Z="-20.0"/>
         <Rotation X="0.0" Y="0.0" Z="-0.0"/>
+        <PatrolPoints N="8" X="-40.0" Y="0.5" Z="-20.0">
+          <Randomise X="40.0" Y="0" Z = "40.0"/>
+        </PatrolPoints>
       </Entity>
     </Team>
 
@@ -53,14 +62,23 @@
      <Entity Type="Oberon MkII" Name="B-1">
         <Position X="20.0" Y="0.5" Z="20.0"/>
         <Rotation X="0.0" Y="180.0" Z="-0.0"/>
+        <PatrolPoints N="8" X="20.0" Y="0.5" Z="20.0">
+          <Randomise X="40.0" Y="0" Z = "40.0"/>
+        </PatrolPoints>
      </Entity>
      <Entity Type="Oberon MkIII" Name="B-2">
         <Position X="30.0" Y="0.5" Z="20.0"/>
         <Rotation X="0.0" Y="180.0" Z="-0.0"/>
+        <PatrolPoints N="8" X="30.0" Y="0.5" Z="20.0">
+          <Randomise X="40.0" Y="0" Z = "40.0"/>
+        </PatrolPoints>
       </Entity>
       <Entity Type="Oberon MkIV" Name="B-3">
         <Position X="40.0" Y="0.5" Z="20.0"/>
         <Rotation X="0.0" Y="180.0" Z="-0.0"/>
+        <PatrolPoints N="8" X="40.0" Y="0.5" Z="20.0">
+          <Randomise X="40.0" Y="0" Z = "40.0"/>
+        </PatrolPoints>
       </Entity>
     </Team>
     

@@ -90,7 +90,8 @@ public:
 		const string&   name = "",
 		const CVector3& position = CVector3::kOrigin,
 		const CVector3& rotation = CVector3(0.0f, 0.0f, 0.0f),
-		const CVector3& scale = CVector3(1.0f, 1.0f, 1.0f)
+		const CVector3& scale = CVector3(1.0f, 1.0f, 1.0f),
+		const vector<CVector3> patrolPoints = {}
 	);
 
 	// Create a shell, requires a shell template name, may supply entity name and position

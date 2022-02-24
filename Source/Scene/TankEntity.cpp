@@ -64,7 +64,8 @@ CTankEntity::CTankEntity
 	const string&   name /*=""*/,
 	const CVector3& position /*= CVector3::kOrigin*/, 
 	const CVector3& rotation /*= CVector3( 0.0f, 0.0f, 0.0f )*/,
-	const CVector3& scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/
+	const CVector3& scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/,
+	const vector<CVector3> patrolPoints
 ) : CEntity( tankTemplate, UID, name, position, rotation, scale )
 {
 	m_TankTemplate = tankTemplate;
@@ -79,11 +80,19 @@ CTankEntity::CTankEntity
 	m_Timer = 0.0f;
 
 	//Initialise Patrol Data
-	patrolAmount = { 0,0,30 };
-	tankInitialPosition = Position();
-	patrolPoint1 = tankInitialPosition + patrolAmount;
-	patrolPoint2 = tankInitialPosition - patrolAmount;
-	reversed = false;
+	//patrolZAmount = { 0,0,30 };
+	//patrolXAmount = { 30,0,0 };
+	//tankInitialPosition = Position();
+	//patrolPoint1 = tankInitialPosition + patrolZAmount;
+	//patrolPoint2 = tankInitialPosition - patrolZAmount;
+	//reversed = false;
+	currentPatrolPoint = 0;
+	//PatrolPoints.push_back(tankInitialPosition + patrolZAmount);
+	//PatrolPoints.push_back(tankInitialPosition + patrolXAmount);
+	//PatrolPoints.push_back(tankInitialPosition - patrolZAmount);
+	//PatrolPoints.push_back(tankInitialPosition - patrolXAmount);
+
+	PatrolPoints = patrolPoints;			
 }
 
 
@@ -119,11 +128,11 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	// Tank behaviour
 	if (m_State == Patrol)
 	{
-		// Set speed to 10
-		m_Speed = 10;
+		// Set speed to template speed
+		m_Speed = m_TankTemplate->GetMaxSpeed();
 
 		// Drive between patrol points
-		if (Distance(Position(), patrolPoint1) < 2.0f)
+		/*if (Distance(Position(), patrolPoint1) < 2.0f)
 		{
 			reversed = true;
 		}
@@ -139,10 +148,23 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		{
 			Matrix(0).FaceTarget(patrolPoint2);
 
+		}*/
+
+		if (Distance(Position(), PatrolPoints[currentPatrolPoint]) < 2.0f)
+		{
+			if (currentPatrolPoint < PatrolPoints.size() - 1)
+			{
+				currentPatrolPoint++;
+			}
+			else
+			{
+				currentPatrolPoint = 0;
+			}
 		}
+		Matrix(0).FaceTarget(PatrolPoints[currentPatrolPoint]);
 
 		// Spin the turret
-		Matrix(2).RotateY(0.01);
+		Matrix(2).RotateY(ToRadians(m_TankTemplate->GetTurretTurnSpeed()));
 
 		// If enemy is in view
 		if (IsLookingAtEnemy(ToRadians(15)))
@@ -173,7 +195,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				if (!IsLookingAtEnemy(ToRadians(1)) && !correctAim)
 				{
 					// Rotate the turret faster
-					Matrix(2).RotateY(0.015);
+					Matrix(2).RotateY(ToRadians(m_TankTemplate->GetTurretTurnSpeed() + 0.1));
 				}
 				else
 				{
@@ -222,8 +244,8 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	}
 	else if (m_State == Evade)
 	{
-		// Set speed to 10
-		m_Speed = 10;
+		// Set speed to template speed
+		m_Speed = m_TankTemplate->GetMaxSpeed();
 
 		// Face the new position
 		Matrix(0).FaceTarget(evadePosition);
@@ -241,7 +263,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		}
 		else if (turretRotation.y > bodyRotation.y + ToRadians(3))
 		{
-			Matrix(2).RotateY(-0.02);
+			Matrix(2).RotateY(0.02);
 		}
 
 		// If the new positon has been reached
@@ -272,7 +294,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				{
 					// Face the ammo and move towards it
 					Matrix(0).FaceTarget(nearestAmmoPosition);
-					m_Speed = 10;
+					m_Speed = m_TankTemplate->GetMaxSpeed();
 				}
 
 				// If close enough to the ammo

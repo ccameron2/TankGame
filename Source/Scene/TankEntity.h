@@ -132,7 +132,8 @@ public:
 		const string&   name = "",
 		const CVector3& position = CVector3::kOrigin, 
 		const CVector3& rotation = CVector3( 0.0f, 0.0f, 0.0f ),
-		const CVector3& scale = CVector3( 1.0f, 1.0f, 1.0f )
+		const CVector3& scale = CVector3( 1.0f, 1.0f, 1.0f ),
+		const vector<CVector3> patrolPoints = {}
 	);
 
 	// No destructor needed
@@ -251,12 +252,14 @@ private:
 	TFloat32 m_Timer; // A timer used in the example update function   
 
 	// Patrol Data
-	CVector3 patrolAmount;
+	CVector3 patrolZAmount;
+	CVector3 patrolXAmount;
 	CVector3 tankInitialPosition;
 	CVector3 patrolPoint1;
 	CVector3 patrolPoint2;
 	bool reversed;
-
+	vector<CVector3> PatrolPoints;
+	int currentPatrolPoint;
 	// Turret Rotation Variables
 	const float pi = 3.141592653589;
 	float targetAngle = pi/12; // 15 degrees
