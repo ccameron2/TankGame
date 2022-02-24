@@ -47,9 +47,10 @@ public:
 		const CVector3&  position = CVector3::kOrigin, 
 		const CVector3&  rotation = CVector3( 0.0f, 0.0f, 0.0f ),
 		const CVector3&  scale = CVector3( 1.0f, 1.0f, 1.0f ),
-		const int		 team = 0
-	);
+		const int		 team = 0,
+		const int		 damage = 20
 
+	);
 	// No destructor needed
 
 
@@ -78,6 +79,7 @@ private:
 	int m_Speed = 0;
 	int m_Team;
 	int m_EnemyTeam;
+	int m_Damage;
 };
 
 

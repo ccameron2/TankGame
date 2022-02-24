@@ -42,7 +42,8 @@ CShellEntity::CShellEntity
 	const CVector3&  position /*= CVector3::kOrigin*/, 
 	const CVector3&  rotation /*= CVector3( 0.0f, 0.0f, 0.0f )*/,
 	const CVector3&  scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/,
-	const int		 team
+	const int		 team,
+	const int		 damage
 ) : CEntity( entityTemplate, UID, name, position, rotation, scale )
 {
 	m_Speed = 100;
@@ -55,6 +56,7 @@ CShellEntity::CShellEntity
 	{
 		m_EnemyTeam = 0;
 	}
+	m_Damage = damage;
 }
 
 
@@ -84,6 +86,8 @@ bool CShellEntity::Update( TFloat32 updateTime )
 	// Move along local Z axis scaled by update time
 	Matrix().MoveLocalZ(m_Speed * updateTime);
 
+
+	// For each tank check if the shell is within hit distance
 	EntityManager.BeginEnumEntities("", "", "Tank");
 	CEntity* entity;
 	while (entity = EntityManager.EnumEntity())
@@ -93,10 +97,7 @@ bool CShellEntity::Update( TFloat32 updateTime )
 		{
 			if (Distance(Position(), tankEntity->Position()) < 2.0f)
 			{
-				SMessage hitMsg;
-				hitMsg.from = GetUID();
-				hitMsg.type = Msg_Hit;
-				Messenger.SendMessage(tankEntity->GetUID(), hitMsg);
+				tankEntity->Hit(m_Damage);
 				EntityManager.EndEnumEntities();
 				return false;
 			}

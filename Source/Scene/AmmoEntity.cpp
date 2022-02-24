@@ -36,6 +36,7 @@ namespace gen
 			}
 		}
 
+		//Lower crate to the ground slowly
 		if (Position().y > 0)
 		{
 			Matrix().MoveLocalY(-0.1);

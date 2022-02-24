@@ -205,13 +205,18 @@ public:
 	// Return false if the entity is to be destroyed
 	// Keep as a virtual function in case of further derivation
 	virtual bool Update( TFloat32 updateTime );
-
-	//Check if enemy tank is being looked at
+	 
+	// Check if enemy tank is being looked at
 	bool IsLookingAtEnemy(float targetAngle);
 
+	// Find closest tank
 	void FindNearestTank();
 
+	// Find closest ammo
 	void FindNearestAmmo();
+
+	// Hit tank
+	void Hit(float damage);
 	
 
 /////////////////////////////////////
@@ -220,7 +225,7 @@ private:
 	/////////////////////////////////////
 	// Types
 
-	// States available for a tank - placeholders for shell code
+	// States available for a tank
 	enum EState
 	{
 		Inactive,
@@ -245,30 +250,40 @@ private:
 	EState   m_State; // Current state
 	TFloat32 m_Timer; // A timer used in the example update function   
 
-	//Patrol Data
+	// Patrol Data
 	CVector3 patrolAmount;
 	CVector3 tankInitialPosition;
 	CVector3 patrolPoint1;
 	CVector3 patrolPoint2;
 	bool reversed;
 
-	//Turret Rotation Variables
+	// Turret Rotation Variables
 	const float pi = 3.141592653589;
-	float targetAngle = pi/12; //15 degrees
+	float targetAngle = pi/12; // 15 degrees
 	float preciseTargetAngle = 5 * (pi / 180);
 	CVector3 evadePosition;
 
+	// Aim variables
 	CTimer timer;
-	int m_ShellCount = 0;
+	bool timerStarted = false;
+	bool correctAim = false;
+
+	// Other relevant tanks
 	TEntityUID nearestEnemyTank = 0;
 	TFloat32 nearestTankDistance;
 	TEntityUID tankToHelp = 0;
-	bool timerStarted = false;
+
+	// Combat variables
 	int viewDistance = 100;
 	int ammunition = 10;
+	int m_ShellCount = 0; // Number of times tank has fired
+
+	//Nearest ammo crate
 	TEntityUID nearestAmmo = 0;
 	TFloat32 nearestAmmoDistance;
+
+	//If tank has been rotated
 	bool broken = false;
-	bool correctAim = false;
+
 };
 } // namespace gen

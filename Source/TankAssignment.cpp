@@ -82,19 +82,18 @@ float AverageUpdateTime = -1.0f; // Invalid value at first
 //Picking
 TEntityUID NearestTankEntity;
 float NearestEntityDistance;
-
-bool toggleExtendedInfo = true;
-bool grabbedTank = false;
-int pickDist = 50;
+bool ToggleExtendedInfo = true;
+bool GrabbedTank = false;
+int PickDist = 50;
 
 //Chase camera
-bool chaseCamera = false;
-TEntityUID chasedTank;
+bool ChaseCamera = false;
+TEntityUID ChasedTank;
 
-//Ammo
-CTimer ammoTimer;
-bool ammoTimerStarted = true;
-int ammoTimerDuration = 0;
+//Ammo variables
+CTimer AmmoTimer;
+bool AmmoTimerStarted = true;
+int AmmoTimerDuration = 0;
 
 
 //-----------------------------------------------------------------------------
@@ -109,14 +108,17 @@ bool SceneSetup()
 	InitInput();
 	InitialiseMethods();
 
+
+	//Load entities from xml
 	LevelParser.ParseFile("Entities.xml");
 
-
+	//Create tree entities
 	for (int i = 0; i < treeNum; i++)
 	{
 		EntityManager.CreateEntity("Tree", "Tree " + to_string(i));
 	}
 
+	//For each tree set position and rotation randomly
 	EntityManager.BeginEnumEntities("", "Tree", "Scenery");
 	CEntity* entity = 0;
 	while (entity = EntityManager.EnumEntity())
@@ -256,15 +258,14 @@ void RenderSceneText( float updateTime )
 		outText.str("");
 	}
 
-	//Picking
-	
-	
-	if (!chaseCamera)
+	//Picking	
+	if (!ChaseCamera)
 	{
-		if (!grabbedTank)
+		if (!GrabbedTank)
 		{
 			CVector2 MousePixel = { TFloat32(MouseX),TFloat32(MouseY) };
 
+			//For each tank, check distance from mouse pixel
 			EntityManager.BeginEnumEntities("", "", "Tank");
 			CEntity* entity;
 			while (entity = EntityManager.EnumEntity())
@@ -275,21 +276,29 @@ void RenderSceneText( float updateTime )
 				}
 				if (NearestTankEntity == 0)
 				{
-					NearestEntityDistance = 9999999;
+					NearestEntityDistance = INT_MAX;
 				}
 				else
 				{
+					//Get nearest tank pixel from world
 					TInt32 x, y = 0;
 					MainCamera->PixelFromWorldPt(EntityManager.GetEntity(NearestTankEntity)->Position(), ViewportWidth, ViewportHeight, &x, &y);
 					CVector2 nearestEntityPos2D = { TFloat32(x),TFloat32(y) };
+
+					//Store distance from nearest tank to pixel
 					NearestEntityDistance = Distance(MousePixel, nearestEntityPos2D);
 				}
+
+				//Find tank pixel from world
 				TInt32 x, y = 0;
 				MainCamera->PixelFromWorldPt(entity->Position(), ViewportWidth, ViewportHeight, &x, &y);
 				CVector2 entityPos2D = { TFloat32(x),TFloat32(y) };
+
+				//Check if distance is smaller than the current nearest distance found
 				auto currentEntityDistance = Distance(MousePixel, entityPos2D);
 				if (currentEntityDistance < NearestEntityDistance)
 				{
+					//Update the nearest tank entity
 					NearestTankEntity = entity->GetUID();
 				}
 			}
@@ -297,6 +306,7 @@ void RenderSceneText( float updateTime )
 		}
 	}
 
+	//For each tank, render text
 	EntityManager.BeginEnumEntities("", "", "Tank");
 	CEntity* entity = 0;
 	while (entity = EntityManager.EnumEntity())
@@ -304,23 +314,36 @@ void RenderSceneText( float updateTime )
 		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(entity->GetUID()));
 		if (tankEntity)
 		{
+			//If in front of the camera
 			int X, Y = 0;
 			if (MainCamera->PixelFromWorldPt(tankEntity->Position(), ViewportWidth, ViewportHeight, &X, &Y))
 			{
+				//Render template name and entity name
 				outText << tankEntity->Template()->GetName().c_str() << " " << tankEntity->GetName().c_str();
-				if (toggleExtendedInfo)
+
+				//If extended info turned on 
+				if (ToggleExtendedInfo)
 				{
+					//Render health, state and shellcount
 					outText << " " << tankEntity->GetHP() << " "
 						<< tankEntity->GetState() << " "
 						<< tankEntity->GetShellCount();
 				}
+
+				//If nearest tank to cursor
 				if (tankEntity->GetUID() == NearestTankEntity)
 				{ 
-					if (!grabbedTank) { RenderText(outText.str(), X, Y, 1.0f, 1.0f, 0.0f, true); }
+					//If grabbed render text red else render text yellow
+					if (!GrabbedTank) { RenderText(outText.str(), X, Y, 1.0f, 1.0f, 0.0f, true); }
 					else { RenderText(outText.str(), X, Y, 1.0f, 0.0f, 0.0f, true); }
 				}
+
+				//Render team 0 green
 				else if(tankEntity->GetTeam() == 0) { RenderText(outText.str(), X, Y, 0.0f, 1.0f, 0.0f, true); }
+
+				//Render team 1 blue
 				else if (tankEntity->GetTeam() == 1) { RenderText(outText.str(), X, Y, 0.0f, 0.0f, 1.0f, true); }
+
 				outText.str("");
 			}
 		}
@@ -336,13 +359,14 @@ void UpdateScene( float updateTime )
 	// Call all entity update functions
 	EntityManager.UpdateAllEntities( updateTime );
 
+	//Get pointer to nearest entity
 	CEntity* nearestEntity = EntityManager.GetEntity(NearestTankEntity);
 
 	// Set camera speeds
 	// Key F1 used for full screen toggle
 	if (KeyHit(Key_F2)) CameraMoveSpeed = 5.0f;
 	if (KeyHit(Key_F3)) CameraMoveSpeed = 40.0f;
-	if (KeyHit(Key_1))
+	if (KeyHit(Key_1))//Send start message to all tanks
 	{
 		EntityManager.BeginEnumEntities("", "", "Tank");
 		CEntity* entity = 0;
@@ -351,11 +375,11 @@ void UpdateScene( float updateTime )
 			SMessage msg;
 			msg.type = Msg_Start;
 			Messenger.SendMessageA(entity->GetUID(), msg);
-			ammoTimerStarted = false;
+			AmmoTimerStarted = false;
 		}
 
 	}
-	if (KeyHit(Key_2))
+	if (KeyHit(Key_2)) //Send stop message to all tanks
 	{
 		EntityManager.BeginEnumEntities("", "", "Tank");
 		CEntity* entity = 0;
@@ -366,51 +390,60 @@ void UpdateScene( float updateTime )
 			Messenger.SendMessageA(entity->GetUID(), msg);
 		}
 	}
-	if (KeyHit(Key_0))
+	if (KeyHit(Key_0)) //Toggle extended info text under tank
 	{
-		if (toggleExtendedInfo)
+		if (ToggleExtendedInfo)
 		{
-			toggleExtendedInfo = false;
+			ToggleExtendedInfo = false;
 		}
 		else
 		{
-			toggleExtendedInfo = true;
+			ToggleExtendedInfo = true;
 		}
 	}
-	if (KeyHit(Mouse_LButton))
+	if (KeyHit(Mouse_LButton)) 
 	{
-		if (grabbedTank)
+		//If tank has been grabbed
+		if (GrabbedTank)
 		{
+			//Calculate new position for tank
 			auto worldPt = MainCamera->WorldPtFromPixel(MouseX, MouseY, ViewportWidth, ViewportHeight);
 			auto direction = worldPt - MainCamera->Position();
 			direction.Normalise();
-			auto newPosition = worldPt + pickDist * direction;
+			auto newPosition = worldPt + PickDist * direction;
+
+			//Set new position
 			nearestEntity->Position().x = newPosition.x;
 			nearestEntity->Position().z = newPosition.z;
-			grabbedTank = false;
+
+			//Let go of the tank
+			GrabbedTank = false;
 		}
 		else
 		{
-			grabbedTank = true;
+			//Grab the tank
+			GrabbedTank = true;
 		}
+
+		//Send a start message to the tank
 		SMessage msg;
 		msg.type = Msg_Start;
 		Messenger.SendMessageA(nearestEntity->GetUID(), msg);
 
 	}
-	if (KeyHit(Mouse_RButton))
+	if (KeyHit(Mouse_RButton)) //Toggle chase camera for nearest tank to cursor
 	{
-		if (chaseCamera)
+		if (ChaseCamera)
 		{
-			chaseCamera = false;
+			ChaseCamera = false;
 		}
 		else
 		{
-			chaseCamera = true;
+			ChaseCamera = true;
 		}
 	}
 
-	if (chaseCamera)
+	if (ChaseCamera)
 	{
 		// Take camera position from player, moved backwards and upwards
 		MainCamera->Position() = nearestEntity->Position() - nearestEntity->Matrix().ZAxis() * 12.0f +
@@ -425,18 +458,22 @@ void UpdateScene( float updateTime )
 			CameraMoveSpeed * updateTime, CameraRotSpeed * updateTime);
 	}
 
-	if (!ammoTimerStarted)
+	if (!AmmoTimerStarted)
 	{
-		ammoTimer.Start();
-		ammoTimerDuration = Random(5, 15);
-		ammoTimerStarted = true;
+		//Count down a random length timer to deploy ammo for tanks
+		AmmoTimer.Start();
+		AmmoTimerDuration = Random(5, 15);
+		AmmoTimerStarted = true;
 	}
 
-	if (ammoTimer.GetTime() > ammoTimerDuration)
+	if (AmmoTimer.GetTime() > AmmoTimerDuration)
 	{
-		ammoTimer.Reset();
-		ammoTimerStarted = false;
-		ammoTimerDuration = 0;
+		//Reset the ammo timer
+		AmmoTimer.Reset();
+		AmmoTimerStarted = false;
+		AmmoTimerDuration = 0;
+
+		//Spawn a new ammo crate
 		auto newAmmoUID = EntityManager.CreateAmmo("Ammo", "Ammo", CVector3(Random(-100.0f, 100.0f), 50.0f, Random(-100.0f, 100.0f)));
 		EntityManager.GetEntity(newAmmoUID)->Matrix().Scale({ 0.5,0.5,0.5 });
 	}

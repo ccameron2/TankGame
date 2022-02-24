@@ -176,7 +176,8 @@ TEntityUID CEntityManager::CreateShell
 	const CVector3& position /*= CVector3::kOrigin*/,
 	const CVector3& rotation /*= CVector3( 0.0f, 0.0f, 0.0f )*/,
 	const CVector3& scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/,
-	const int		team
+	const int		team,
+	const int		damage
 	)
 {
 	// Get template associated with the template name
@@ -184,7 +185,7 @@ TEntityUID CEntityManager::CreateShell
 
 	// Create new shell entity with next UID
 	CEntity* newEntity = new CShellEntity(entityTemplate, m_NextUID,
-		name, position, rotation, scale, team);
+		name, position, rotation, scale, team, damage);
 
 	// Get vector index for new entity and add it to vector
 	TUInt32 entityIndex = static_cast<int>(m_Entities.size());

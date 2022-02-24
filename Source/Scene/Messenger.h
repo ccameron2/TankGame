@@ -23,11 +23,10 @@ enum EMessageType
 {
 	Msg_Go,   // Start moving
 	Msg_Stop, // Stop all action
-	Msg_Start,
-	Msg_Hit,
-	Msg_Evade,
-	Msg_Help,
-	Msg_Collected
+	Msg_Start,// Start the game
+	Msg_Evade,// Move into the evade state with a new target
+	Msg_Help, // Help the friendly tank if appropriate
+	Msg_Collected // Collected an ammo crate (destroy ammo entity)
 };
 
 // A message contains a type and the UID that sent it.

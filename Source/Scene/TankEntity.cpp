@@ -106,23 +106,6 @@ bool CTankEntity::Update( TFloat32 updateTime )
 			case Msg_Start:
 				m_State = Patrol;
 				break;
-			case Msg_Hit:
-				m_HP -= 20;
-				EntityManager.BeginEnumEntities("", "", "Tank");
-				CEntity* entity;
-				while (entity = EntityManager.EnumEntity())
-				{
-					CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
-					if (tankEntity->GetState() != "Dead" && tankEntity->IsLookingAtEnemy(ToRadians(15)))
-					{
-						SMessage msg;
-						msg.from = GetUID();
-						msg.type = Msg_Help;
-						Messenger.SendMessageA(entity->GetUID(), msg);
-					}
-					
-				}
-				break;
 			case Msg_Evade:
 				evadePosition = Position() + CVector3{ float(Random(1,40)), 0, float(Random(1,40)) };
 				m_State = Evade;
@@ -210,7 +193,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 			(Matrix(0) * Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
 			if (ammunition > 0)
 			{
-				EntityManager.CreateShell("Shell Type 1", "", Position(), turretRotation, { 1,1,1 }, m_Team);
+				EntityManager.CreateShell("Shell Type 1", "", Position(), turretRotation, { 1,1,1 }, m_Team, m_TankTemplate->GetShellDamage());
 				m_ShellCount++;
 				ammunition--;
 				SMessage msg;
@@ -391,6 +374,26 @@ void CTankEntity::FindNearestAmmo()
 		}		
 	}
 	EntityManager.EndEnumEntities();
+}
+
+void CTankEntity::Hit(float damage)
+{
+	m_HP -= damage;
+	EntityManager.BeginEnumEntities("", "", "Tank");
+	CEntity* entity;
+	while (entity = EntityManager.EnumEntity())
+	{
+		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
+		if (tankEntity->GetTeam() == m_Team && tankEntity->GetState() != "Dead"
+			&& tankEntity->IsLookingAtEnemy(ToRadians(15)))
+		{
+			SMessage msg;
+			msg.from = GetUID();
+			msg.type = Msg_Help;
+			Messenger.SendMessageA(entity->GetUID(), msg);
+		}
+
+	}
 }
 
 

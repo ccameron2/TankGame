@@ -126,7 +126,6 @@ bool CCamera::PixelFromWorldPt( CVector3 worldPt, TUInt32 ViewportWidth, TUInt32
 	*Y = y;
 
 	return true;
-	//return false; // Placeholder code, fill in for User Interface assignment task
 }
 
 // Calculate the world coordinates of a point on the near clip plane corresponding to given 
@@ -144,7 +143,7 @@ CVector3 CCamera::WorldPtFromPixel( TInt32 X, TInt32 Y,
 	cameraPt.y *= apertureHeight;
 	CVector3 worldPt = InverseAffine(m_MatView).TransformPoint(cameraPt);
 
-	return worldPt; // Placeholder code, fill in for User Interface assignment task
+	return worldPt;
 }
 
 

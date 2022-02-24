@@ -16,10 +16,6 @@ using namespace std;
 
 namespace gen
 {
-
-	//**** No need for a template class for Ammo - there are no generic features for ammo
-	//**** other than their mesh so they can use the base class
-
 	/*-----------------------------------------------------------------------------------------
 	-------------------------------------------------------------------------------------------
 		Ammo Entity Class
@@ -61,15 +57,6 @@ namespace gen
 		// Return false if the entity is to be destroyed
 		// Keep as a virtual function in case of further derivation
 		virtual bool Update(TFloat32 updateTime);
-
-
-		/////////////////////////////////////
-		//	Private interface
-	private:
-
-		/////////////////////////////////////
-		// Data
-		// Add your Ammo data here
 	};
 
 
