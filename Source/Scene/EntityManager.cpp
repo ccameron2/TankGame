@@ -200,14 +200,14 @@ TEntityUID CEntityManager::CreateShell
 	return m_NextUID++;
 }
 
-TEntityUID CEntityManager::CreateAmmo(const string& templateName, const string& name, const CVector3& position, const CVector3& rotation, const CVector3& scale, const int team)
+TEntityUID CEntityManager::CreateAmmo(const string& templateName, const string& name, const CVector3& position, const CVector3& rotation, const CVector3& scale)
 {
 	// Get template associated with the template name
 	CEntityTemplate* entityTemplate = GetTemplate(templateName);
 
 	// Create new shell entity with next UID
 	CEntity* newEntity = new CAmmoEntity(entityTemplate, m_NextUID,
-		name, position, rotation, scale, team);
+		name, position, rotation, scale);
 
 	// Get vector index for new entity and add it to vector
 	TUInt32 entityIndex = static_cast<int>(m_Entities.size());

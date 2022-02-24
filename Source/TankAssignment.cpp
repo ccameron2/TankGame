@@ -84,7 +84,7 @@ TEntityUID NearestTankEntity;
 float NearestEntityDistance;
 bool ToggleExtendedInfo = true;
 bool GrabbedTank = false;
-int PickDist = 50;
+int PickDist = 100;
 
 //Chase camera
 bool ChaseCamera = false;

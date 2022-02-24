@@ -74,9 +74,15 @@ private:
 	/////////////////////////////////////
 	// Data
 	// Add your shell data here
+
+	// Lifetime timer
 	CTimer shellTimer;
 	bool hasStarted = false;
+
+	// Movement
 	int m_Speed = 0;
+
+	// Combat
 	int m_Team;
 	int m_EnemyTeam;
 	int m_Damage;

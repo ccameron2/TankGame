@@ -97,6 +97,7 @@ bool CShellEntity::Update( TFloat32 updateTime )
 		{
 			if (Distance(Position(), tankEntity->Position()) < 2.0f)
 			{
+				//Damage the tank
 				tankEntity->Hit(m_Damage);
 				EntityManager.EndEnumEntities();
 				return false;

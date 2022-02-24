@@ -111,18 +111,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				m_State = Evade;
 				break;
 			case Msg_Help:
-				tankToHelp = msg.from;
-				if (EntityManager.GetEntity(tankToHelp))
-				{
-					CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(tankToHelp));
-					if (tankEntity->IsLookingAtEnemy(ToRadians(15)))
-					{
-						if (Distance(Position(), EntityManager.GetEntity(tankToHelp)->Position()) < viewDistance)
-						{
-							m_State = Aim;
-						}
-					}
-				}				
+				m_State = Aim;			
 				break;
 		}
 	}
@@ -130,7 +119,10 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	// Tank behaviour
 	if (m_State == Patrol)
 	{
+		// Set speed to 10
 		m_Speed = 10;
+
+		// Drive between patrol points
 		if (Distance(Position(), patrolPoint1) < 2.0f)
 		{
 			reversed = true;
@@ -148,34 +140,44 @@ bool CTankEntity::Update( TFloat32 updateTime )
 			Matrix(0).FaceTarget(patrolPoint2);
 
 		}
+
+		// Spin the turret
 		Matrix(2).RotateY(0.01);
 
+		// If enemy is in view
 		if (IsLookingAtEnemy(ToRadians(15)))
 		{
+			// Move to aim state
 			m_State = Aim;
 		}
 	}
 	else if (m_State == Aim)
 	{
-		//Start timer if idle
+		// Start timer if idle
 		if (timerStarted == false)
 		{
 			timer.Start();
 			timerStarted = true;
 		}
-
+		
+		// Set speed to 0
 		m_Speed = 0;
 
+		// If less than a second has passed
 		if (timer.GetTime() < 1)
 		{	
+			// If tank is still looking at enemy
 			if (IsLookingAtEnemy(ToRadians(15)))
 			{
+				// If tank is not within a smaller angle
 				if (!IsLookingAtEnemy(ToRadians(1)) && !correctAim)
 				{
+					// Rotate the turret faster
 					Matrix(2).RotateY(0.015);
 				}
 				else
 				{
+					// Prevent over aiming
 					correctAim = true;
 				}
 			}
@@ -183,25 +185,36 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		}
 		else
 		{
+			// Stop and reset the timer
 			timer.Stop();
 			timerStarted = false;
 			timer.Reset();
 			correctAim = false;
 
-			//Fire a shell and change to evade state
+			// Get rotation of turret
 			CVector3 turretRotation;
 			(Matrix(0) * Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
+
+			// If the tank has ammo
 			if (ammunition > 0)
 			{
+				// Fire a shell
 				EntityManager.CreateShell("Shell Type 1", "", Position(), turretRotation, { 1,1,1 }, m_Team, m_TankTemplate->GetShellDamage());
+
+				// Increment shell count
 				m_ShellCount++;
+				
+				// Decrease ammunition
 				ammunition--;
+
+				// Move to evade state with new position
 				SMessage msg;
 				msg.type = Msg_Evade;
 				Messenger.SendMessageA(GetUID(), msg);
 			}
 			else
 			{
+				// Discover that the tank is empty and move to empty state
 				m_State = Empty;
 			}
 				
@@ -209,12 +222,19 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	}
 	else if (m_State == Evade)
 	{
+		// Set speed to 10
 		m_Speed = 10;
+
+		// Face the new position
 		Matrix(0).FaceTarget(evadePosition);
+
+		// Get rotation of body and rotation of turret
 		CVector3 bodyRotation;
 		Matrix(0).DecomposeAffineEuler(NULL, &bodyRotation, NULL);
 		CVector3 turretRotation;
 		(Matrix(0)*Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
+
+		// Rotate the turret to match the body
 		if (turretRotation.y < bodyRotation.y - ToRadians(3))
 		{			
 			Matrix(2).RotateY(0.02);
@@ -223,30 +243,48 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		{
 			Matrix(2).RotateY(-0.02);
 		}
+
+		// If the new positon has been reached
 		if (Distance(Position(), evadePosition) < 2.0f)
 		{
+			// Return to patrol positon
 			m_State = Patrol;
 		}
 
 	}
 	else if (m_State == Empty)
 	{
+		// Stop the tank
 		m_Speed = 0;
+
+		// Look for nearest ammo crate
 		FindNearestAmmo();
+
 		if (nearestAmmo != 0)
 		{
 			if (EntityManager.GetEntity(nearestAmmo))
 			{
+				// Get ammo position
 				auto nearestAmmoPosition = EntityManager.GetEntity(nearestAmmo)->Position();
+
+				// If ammo is on the floor
 				if (nearestAmmoPosition.y < 1)
 				{
+					// Face the ammo and move towards it
 					Matrix(0).FaceTarget(nearestAmmoPosition);
 					m_Speed = 10;
 				}
+
+				// If close enough to the ammo
 				if (Distance(Position(), nearestAmmoPosition) < 2)
 				{
+					// Refill ammmo
 					ammunition += 10;
+
+					// Set back to patrol state
 					m_State = Patrol;
+
+					// Send a collected message to the ammo (to destroy)
 					SMessage msg;
 					msg.from = GetUID();
 					msg.type = Msg_Collected;
@@ -258,13 +296,24 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	}
 	else if (m_State == Dead)
 	{
+		// Stop the tank
 		m_Speed = 0;
+
+		// If tank has not been broken yet
 		if (!broken)
 		{
-			Matrix(0).RotateX(ToRadians(Random(45,90)));
+			// Rotate the body and turret randomly
+			Matrix(0).RotateX(ToRadians(Random(45, 90)));
 			Matrix(0).RotateY(ToRadians(Random(45, 90)));
 			Matrix(0).RotateZ(ToRadians(Random(45, 90)));
+			(Matrix(0) * Matrix(2)).RotateX(ToRadians(Random(45, 90)));
+			(Matrix(0) * Matrix(2)).RotateY(ToRadians(Random(45, 90)));
+			(Matrix(0) * Matrix(2)).RotateZ(ToRadians(Random(45, 90)));
+
+			// Lower tank to the ground
 			Position() -= {0, 1, 0};
+
+			// Update broken status
 			broken = true;
 		}
 		
@@ -274,7 +323,7 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		m_Speed = 0;
 	}
 
-
+	// If tank runs out of health set to dead state
 	if (m_HP <= 0)
 	{
 		m_State = Dead;
@@ -289,22 +338,35 @@ bool CTankEntity::Update( TFloat32 updateTime )
 
 bool CTankEntity::IsLookingAtEnemy(float targetAngle)
 {
+	// Find the nearest enemy tank
 	FindNearestTank();
 
+	// Get world matrix of the turret
 	CMatrix4x4 turretWorldMatrix = Matrix(2) * Matrix();
 
-	if (EntityManager.GetEntity(nearestEnemyTank) != 0)
+	CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(nearestEnemyTank));
+
+	if ( tankEntity != 0 && tankEntity->GetState() != "Dead")
 	{
+		// Get position of nearest tank
 		CVector3 targetPosition = EntityManager.GetEntity(nearestEnemyTank)->Matrix().Position();
 		auto distanceVector = targetPosition - Position();
+		distanceVector.Normalise();
+
+		// Check if within view distance
 		if (Distance(targetPosition, Position()) > viewDistance)
 		{
 			return false;
 		}
-		distanceVector.Normalise();
+
+		// Get facing vector of turret
 		auto turretFacingVector = turretWorldMatrix.ZAxis();
 		turretFacingVector.Normalise();
+
+		// Calculate dot product between distance vector and turret facing vector
 		auto dot = distanceVector.Dot(turretFacingVector);
+
+		// If the acos(result) is less than the supplied angle then tank is within sight
 		if (acos(dot) <= targetAngle)
 		{
 			return true;
@@ -317,11 +379,14 @@ bool CTankEntity::IsLookingAtEnemy(float targetAngle)
 
 void CTankEntity::FindNearestTank()
 {
+	// For each tank
 	EntityManager.BeginEnumEntities("", "", "Tank");
 	CEntity* entity;
 	while (entity = EntityManager.EnumEntity())
 	{
 		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
+
+		// If the tank is an enemy and not dead
 		if (tankEntity->GetTeam() != m_Team && tankEntity->GetState() != "Dead")
 		{
 			if (EntityManager.GetEntity(nearestEnemyTank) == 0)
@@ -334,11 +399,17 @@ void CTankEntity::FindNearestTank()
 			}
 			else
 			{
+				// Calculate current nearest tank distance
 				nearestTankDistance = Distance(Position(), EntityManager.GetEntity(nearestEnemyTank)->Position());
 			}
+
+			// Calculate distance between tank and self 
 			auto tankDistance = Distance(Position(), tankEntity->Position());
+
+			// If within view distance
 			if (Distance(Position(), tankEntity->Position()) < viewDistance)
 			{
+				// Set tank as nearest current tank
 				if (tankDistance < nearestTankDistance)
 				{
 					nearestEnemyTank = entity->GetUID();
@@ -351,6 +422,7 @@ void CTankEntity::FindNearestTank()
 
 void CTankEntity::FindNearestAmmo()
 {
+	// For each ammo crate
 	EntityManager.BeginEnumEntities("", "", "Ammo");
 	CEntity* entity;
 	while (entity = EntityManager.EnumEntity())
@@ -365,11 +437,17 @@ void CTankEntity::FindNearestAmmo()
 		}
 		else
 		{
+			// Calculate current nearest ammo distance
 			nearestAmmoDistance = Distance(Position(), EntityManager.GetEntity(nearestAmmo)->Position());
 		}
+
+		// Calculate distance between ammo and self
 		auto tankDistance = Distance(Position(), entity->Position());
+
+		// If distance is less than current nearest distance
 		if (tankDistance < nearestAmmoDistance)
 		{
+			// Update current nearest distance 
 			nearestAmmo = entity->GetUID();
 		}		
 	}
@@ -378,15 +456,21 @@ void CTankEntity::FindNearestAmmo()
 
 void CTankEntity::Hit(float damage)
 {
+	// Remove health amount determined by shell
 	m_HP -= damage;
+
+	// For each tank
 	EntityManager.BeginEnumEntities("", "", "Tank");
 	CEntity* entity;
 	while (entity = EntityManager.EnumEntity())
 	{
 		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
+
+		// If tank is friendly, not dead and looking at an enemy
 		if (tankEntity->GetTeam() == m_Team && tankEntity->GetState() != "Dead"
 			&& tankEntity->IsLookingAtEnemy(ToRadians(15)))
 		{
+			// Send a help message
 			SMessage msg;
 			msg.from = GetUID();
 			msg.type = Msg_Help;
@@ -395,7 +479,5 @@ void CTankEntity::Hit(float damage)
 
 	}
 }
-
-
 
 } // namespace gen

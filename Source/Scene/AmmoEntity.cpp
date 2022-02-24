@@ -13,8 +13,7 @@ namespace gen
 		const string& name /*=""*/,
 		const CVector3& position /*= CVector3::kOrigin*/,
 		const CVector3& rotation /*= CVector3( 0.0f, 0.0f, 0.0f )*/,
-		const CVector3& scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/,
-		const int		 team
+		const CVector3& scale /*= CVector3( 1.0f, 1.0f, 1.0f )*/
 	) : CEntity(entityTemplate, UID, name, position, rotation, scale)
 	{
 	}
