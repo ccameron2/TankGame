@@ -91,7 +91,7 @@
       <Position X="0.0" Y="0.0" Z="0.0"/>
     </Entity>
     <Entity Type="Building" Name="Building">
-      <Position X="0.0" Y="0.0" Z="40.0"/>
+      <Position X="0.0" Y="0.0" Z="0.0"/>
     </Entity>
 
   </Entities>

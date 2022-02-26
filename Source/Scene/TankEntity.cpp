@@ -120,6 +120,12 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				m_State = Evade;
 				break;
 			case Msg_Help:
+				tankToGuard = msg.from;
+				isGuarding = true;
+				if (static_cast<CTankEntity*>(EntityManager.GetEntity(tankToGuard))->GetState() != "Dead")
+				{
+					guardPosition = EntityManager.GetEntity(tankToGuard)->Position() + CVector3{ float(Random(-10,10)),0,float(Random(-10,10)) };
+				}			
 				m_State = Aim;			
 				break;
 		}
@@ -169,12 +175,24 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		// If enemy is in view
 		if (IsLookingAtEnemy(ToRadians(15)))
 		{
-			// Move to aim state
-			m_State = Aim;
+			if (LineOfSight())
+			{
+				// Move to aim state
+				m_State = Aim;
+			}
 		}
 	}
 	else if (m_State == Aim)
 	{
+		// If moved to aim state from a help message
+		if (isGuarding)
+		{
+			// Set to guard state if tank is not already looking at enemy
+			if (!IsLookingAtEnemy(15))
+			{
+				m_State = Guard;
+			}
+		}
 		// Start timer if idle
 		if (timerStarted == false)
 		{
@@ -229,11 +247,19 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				// Decrease ammunition
 				ammunition--;
 
-				// Move to evade state with new position
-				SMessage msg;
-				msg.type = Msg_Evade;
-				Messenger.SendMessageA(GetUID(), msg);
-			}
+				// If moved to aim state from a help message
+				if (isGuarding)
+				{
+					m_State = Guard;
+				}
+				else
+				{
+					// Move to evade state with new position
+					SMessage msg;
+					msg.type = Msg_Evade;
+					Messenger.SendMessageA(GetUID(), msg);
+				}
+			}		
 			else
 			{
 				// Discover that the tank is empty and move to empty state
@@ -316,6 +342,17 @@ bool CTankEntity::Update( TFloat32 updateTime )
 			}				
 		}		
 	}
+	else if (m_State == Guard)
+	{
+		//Move to build guard formation around tank that was hit
+		Matrix(0).FaceTarget(guardPosition);
+		m_Speed = m_TankTemplate->GetMaxSpeed();
+		if (Distance(Position(), guardPosition) < 2)
+		{
+			isGuarding = false;
+			m_State = Patrol;
+		}
+	}
 	else if (m_State == Dead)
 	{
 		// Stop the tank
@@ -368,7 +405,8 @@ bool CTankEntity::IsLookingAtEnemy(float targetAngle)
 
 	CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(EntityManager.GetEntity(nearestEnemyTank));
 
-	if ( tankEntity != 0 && tankEntity->GetState() != "Dead")
+	//Check the tank is alive and is in line of sight
+	if ( tankEntity != 0 && tankEntity->GetState() != "Dead" && LineOfSight())
 	{
 		// Get position of nearest tank
 		CVector3 targetPosition = EntityManager.GetEntity(nearestEnemyTank)->Matrix().Position();
@@ -489,8 +527,7 @@ void CTankEntity::Hit(float damage)
 		CTankEntity* tankEntity = dynamic_cast<CTankEntity*>(entity);
 
 		// If tank is friendly, not dead and looking at an enemy
-		if (tankEntity->GetTeam() == m_Team && tankEntity->GetState() != "Dead"
-			&& tankEntity->IsLookingAtEnemy(ToRadians(15)))
+		if (tankEntity->GetTeam() == m_Team && tankEntity->GetState() != "Dead")
 		{
 			// Send a help message
 			SMessage msg;
@@ -501,5 +538,97 @@ void CTankEntity::Hit(float damage)
 
 	}
 }
+
+bool CTankEntity::LineOfSight()
+{
+	//https://stackoverflow.com/a/293052/17702967
+
+	CVector3 p1 = (Matrix(0)*Matrix(2)).Position();
+	CVector3 p2 = EntityManager.GetEntity(nearestEnemyTank)->Position();
+	CVector3 BL{ -7.36,0,-4.35 };
+	CVector3 TR{ 5.12,0,5.36 };
+	CVector3 BR{ 5.12,0,-4.35 };
+	CVector3 TL{ -7.36,0,5.36 };
+	vector<float> results;
+
+	//Check if the corners are all on one side of the line
+	
+	float x, z;
+	//Bottom left corner
+	x = BL.x; z = BL.z;
+	auto functBL = ((p2.z - p1.z) * x) + ((p1.x - p2.x) * z) + ((p2.x * p1.z) - (p1.x * p2.z));
+	results.push_back(functBL);
+
+	//Bottom right corner
+	x = BR.x; z = BR.z;
+	auto functBR = ((p2.z - p1.z) * x) + ((p1.x - p2.x) * z) + ((p2.x * p1.z) - (p1.x * p2.z));
+	results.push_back(functBR);
+
+	//Top left corner
+	x = TL.x; z = TL.z;
+	auto functTL = ((p2.z - p1.z) * x) + ((p1.x - p2.x) * z) + ((p2.x * p1.z) - (p1.x * p2.z));
+	results.push_back(functTL);
+
+	//Top right corner
+	x = TR.x; z = TR.z;
+	auto functTR = ((p2.z - p1.z) * x) + ((p1.x - p2.x) * z) + ((p2.x * p1.z) - (p1.x * p2.z));
+	results.push_back(functTR);
+
+
+	bool allPos = false;
+	bool allNeg = false;
+	bool posFound = false;
+	bool negFound = false;
+
+	for (auto& result : results)
+	{
+		if(result > 0)
+		{
+			posFound = true;
+			if (!negFound)
+			{
+				allPos = true;
+			}
+			else
+			{
+				allPos = false;
+			}
+		}
+		else if(result < 0)
+		{
+			negFound = true;
+			if (!posFound)
+			{
+				allNeg = true;
+			}
+			else
+			{
+				allNeg = false;
+			}
+		}
+		else
+		{
+			allPos = false;
+			allNeg = false;
+			posFound = true;
+			negFound = true;
+		}
+	}
+
+	if (allPos || allNeg)
+	{
+		//All corners are on the same side of the line
+		return true;
+	}
+	else
+	{
+		if (p1.x > TR.x && p2.x > TR.x) { return true; } // To the right
+		else if (p1.x < BL.x && p2.x < BL.x) { return true; } // To the left
+		else if (p1.z > TR.z && p2.z > TR.z) { return true; } // Above
+		else if (p1.z < BL.z && p2.z < BL.z) { return true; } // Below
+		else { return false; } //Intersection
+	}
+}
+
 
 } // namespace gen

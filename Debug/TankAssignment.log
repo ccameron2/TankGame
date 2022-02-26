@@ -1,9 +1,12 @@
-﻿  CParseLevel.cpp
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.h(264,17): warning C4305: 'initializing': truncation from 'double' to 'const float'
-C:\Users\CCame\source\repos\GamesThree\Source\XML\CParseLevel.cpp(112,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\CCame\source\repos\GamesThree\Source\XML\CParseLevel.cpp(130,16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\CCame\source\repos\GamesThree\Source\XML\CParseLevel.cpp(134,22): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\CCame\source\repos\GamesThree\Source\XML\CParseLevel.cpp(136,117): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\CCame\source\repos\GamesThree\Source\XML\CParseLevel.cpp(136,110): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\CCame\source\repos\GamesThree\Source\XML\CParseLevel.cpp(136,58): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  TankEntity.cpp
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.h(272,17): warning C4305: 'initializing': truncation from 'double' to 'const float'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(161,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(216,33): warning C4244: 'argument': conversion from 'gen::TFloat64' to 'const gen::TFloat32', possible loss of data
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(288,26): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(292,26): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(520,10): warning C4244: '-=': conversion from 'float' to 'gen::TInt32', possible loss of data
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(548,29): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(549,27): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(550,28): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(551,28): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
   TankAssignment.vcxproj -> C:\Users\CCame\source\repos\GamesThree\TankAssignment.exe

@@ -183,6 +183,10 @@ public:
 		{
 			return "Dead";
 		}
+		else if (m_State == 6)
+		{
+			return "Guard";
+		}
 		else
 		{
 			return "Error";
@@ -218,6 +222,9 @@ public:
 
 	// Hit tank
 	void Hit(float damage);
+
+	// Check line of sight
+	bool LineOfSight();
 	
 
 /////////////////////////////////////
@@ -234,7 +241,8 @@ private:
 		Aim,
 		Evade,
 		Empty,
-		Dead
+		Dead,
+		Guard
 	};
 	/////////////////////////////////////
 	// Data
@@ -274,7 +282,6 @@ private:
 	// Other relevant tanks
 	TEntityUID nearestEnemyTank = 0;
 	TFloat32 nearestTankDistance;
-	TEntityUID tankToHelp = 0;
 
 	// Combat variables
 	int viewDistance = 100;
@@ -287,6 +294,10 @@ private:
 
 	//If tank has been rotated
 	bool broken = false;
+
+	bool isGuarding = false;
+	CVector3 guardPosition;
+	TEntityUID tankToGuard;
 
 };
 } // namespace gen
