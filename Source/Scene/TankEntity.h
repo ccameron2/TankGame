@@ -225,6 +225,9 @@ public:
 
 	// Check line of sight
 	bool LineOfSight();
+
+	//Rotate turret back to face body
+	void FixTurret();
 	
 
 /////////////////////////////////////

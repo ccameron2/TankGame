@@ -79,18 +79,9 @@ CTankEntity::CTankEntity
 	m_State = Inactive;
 	m_Timer = 0.0f;
 
-	//Initialise Patrol Data
-	//patrolZAmount = { 0,0,30 };
-	//patrolXAmount = { 30,0,0 };
-	//tankInitialPosition = Position();
-	//patrolPoint1 = tankInitialPosition + patrolZAmount;
-	//patrolPoint2 = tankInitialPosition - patrolZAmount;
-	//reversed = false;
+
 	currentPatrolPoint = 0;
-	//PatrolPoints.push_back(tankInitialPosition + patrolZAmount);
-	//PatrolPoints.push_back(tankInitialPosition + patrolXAmount);
-	//PatrolPoints.push_back(tankInitialPosition - patrolZAmount);
-	//PatrolPoints.push_back(tankInitialPosition - patrolXAmount);
+
 
 	PatrolPoints = patrolPoints;			
 }
@@ -120,12 +111,17 @@ bool CTankEntity::Update( TFloat32 updateTime )
 				m_State = Evade;
 				break;
 			case Msg_Help:
+				// Get tank that was hit
 				tankToGuard = msg.from;
+
+				// Get a guard position
 				isGuarding = true;
 				if (static_cast<CTankEntity*>(EntityManager.GetEntity(tankToGuard))->GetState() != "Dead")
 				{
 					guardPosition = EntityManager.GetEntity(tankToGuard)->Position() + CVector3{ float(Random(-10,10)),0,float(Random(-10,10)) };
-				}			
+				}
+				
+				// Move into aim state
 				m_State = Aim;			
 				break;
 		}
@@ -138,23 +134,6 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		m_Speed = m_TankTemplate->GetMaxSpeed();
 
 		// Drive between patrol points
-		/*if (Distance(Position(), patrolPoint1) < 2.0f)
-		{
-			reversed = true;
-		}
-		if (Distance(Position(), patrolPoint2) < 2.0f)
-		{
-			reversed = false;
-		}
-		if (!reversed)
-		{
-			Matrix(0).FaceTarget(patrolPoint1);
-		}
-		else
-		{
-			Matrix(0).FaceTarget(patrolPoint2);
-
-		}*/
 
 		if (Distance(Position(), PatrolPoints[currentPatrolPoint]) < 2.0f)
 		{
@@ -276,21 +255,8 @@ bool CTankEntity::Update( TFloat32 updateTime )
 		// Face the new position
 		Matrix(0).FaceTarget(evadePosition);
 
-		// Get rotation of body and rotation of turret
-		CVector3 bodyRotation;
-		Matrix(0).DecomposeAffineEuler(NULL, &bodyRotation, NULL);
-		CVector3 turretRotation;
-		(Matrix(0)*Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
-
-		// Rotate the turret to match the body
-		if (turretRotation.y < bodyRotation.y - ToRadians(3))
-		{			
-			Matrix(2).RotateY(0.02);
-		}
-		else if (turretRotation.y > bodyRotation.y + ToRadians(3))
-		{
-			Matrix(2).RotateY(0.02);
-		}
+		// Rotate turret to face body
+		FixTurret();
 
 		// If the new positon has been reached
 		if (Distance(Position(), evadePosition) < 2.0f)
@@ -304,6 +270,8 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	{
 		// Stop the tank
 		m_Speed = 0;
+
+		FixTurret();
 
 		// Look for nearest ammo crate
 		FindNearestAmmo();
@@ -344,6 +312,9 @@ bool CTankEntity::Update( TFloat32 updateTime )
 	}
 	else if (m_State == Guard)
 	{
+
+		FixTurret();
+
 		//Move to build guard formation around tank that was hit
 		Matrix(0).FaceTarget(guardPosition);
 		m_Speed = m_TankTemplate->GetMaxSpeed();
@@ -394,6 +365,26 @@ bool CTankEntity::Update( TFloat32 updateTime )
 
 	return true; // Don't destroy the entity
 }
+
+void CTankEntity::FixTurret()
+{
+	// Get rotation of body and rotation of turret
+	CVector3 bodyRotation;
+	Matrix(0).DecomposeAffineEuler(NULL, &bodyRotation, NULL);
+	CVector3 turretRotation;
+	(Matrix(0) * Matrix(2)).DecomposeAffineEuler(NULL, &turretRotation, NULL);
+
+	// Rotate the turret to match the body
+	if (turretRotation.y < bodyRotation.y - ToRadians(3))
+	{
+		Matrix(2).RotateY(0.02);
+	}
+	else if (turretRotation.y > bodyRotation.y + ToRadians(3))
+	{
+		Matrix(2).RotateY(0.02);
+	}
+}
+
 
 bool CTankEntity::IsLookingAtEnemy(float targetAngle)
 {
@@ -545,10 +536,10 @@ bool CTankEntity::LineOfSight()
 
 	CVector3 p1 = (Matrix(0)*Matrix(2)).Position();
 	CVector3 p2 = EntityManager.GetEntity(nearestEnemyTank)->Position();
-	CVector3 BL{ -7.36,0,-4.35 };
-	CVector3 TR{ 5.12,0,5.36 };
-	CVector3 BR{ 5.12,0,-4.35 };
-	CVector3 TL{ -7.36,0,5.36 };
+	CVector3 BL{ -7.36,0,-4.35 + 40 };
+	CVector3 TR{ 5.12,0,5.36 + 40 };
+	CVector3 BR{ 5.12,0,-4.35 + 40 };
+	CVector3 TL{ -7.36,0,5.36 + 40 };
 	vector<float> results;
 
 	//Check if the corners are all on one side of the line

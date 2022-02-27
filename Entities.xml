@@ -38,21 +38,21 @@
       <Entity Type="Rogue Scout" Name="A-1">
         <Position X="-20.0" Y="0.5" Z="-20.0"/>
         <Rotation X="0.0" Y="0.0" Z="-0.0"/>
-        <PatrolPoints N="8" X="-20.0" Y="0.5" Z="-20.0">
+        <PatrolPoints N="4" X="-20.0" Y="0.5" Z="-20.0">
           <Randomise X="40.0" Y="0" Z = "40.0"/>
         </PatrolPoints>
       </Entity>
       <Entity Type="Rogue Warrior" Name="A-2">
         <Position X="-30.0" Y="0.5" Z="-20.0"/>
         <Rotation X="0.0" Y="0.0" Z="-0.0"/>
-        <PatrolPoints N="8" X="-30.0" Y="0.5" Z="-20.0">
+        <PatrolPoints N="4" X="-30.0" Y="0.5" Z="-20.0">
           <Randomise X="40.0" Y="0" Z = "40.0"/>
         </PatrolPoints>
       </Entity>
       <Entity Type="Rogue Leader" Name="A-3">
         <Position X="-40.0" Y="0.5" Z="-20.0"/>
         <Rotation X="0.0" Y="0.0" Z="-0.0"/>
-        <PatrolPoints N="8" X="-40.0" Y="0.5" Z="-20.0">
+        <PatrolPoints N="4" X="-40.0" Y="0.5" Z="-20.0">
           <Randomise X="40.0" Y="0" Z = "40.0"/>
         </PatrolPoints>
       </Entity>
@@ -62,21 +62,21 @@
      <Entity Type="Oberon MkII" Name="B-1">
         <Position X="20.0" Y="0.5" Z="20.0"/>
         <Rotation X="0.0" Y="180.0" Z="-0.0"/>
-        <PatrolPoints N="8" X="20.0" Y="0.5" Z="20.0">
+        <PatrolPoints N="6" X="20.0" Y="0.5" Z="20.0">
           <Randomise X="40.0" Y="0" Z = "40.0"/>
         </PatrolPoints>
      </Entity>
      <Entity Type="Oberon MkIII" Name="B-2">
         <Position X="30.0" Y="0.5" Z="20.0"/>
         <Rotation X="0.0" Y="180.0" Z="-0.0"/>
-        <PatrolPoints N="8" X="30.0" Y="0.5" Z="20.0">
+        <PatrolPoints N="6" X="30.0" Y="0.5" Z="20.0">
           <Randomise X="40.0" Y="0" Z = "40.0"/>
         </PatrolPoints>
       </Entity>
       <Entity Type="Oberon MkIV" Name="B-3">
         <Position X="40.0" Y="0.5" Z="20.0"/>
         <Rotation X="0.0" Y="180.0" Z="-0.0"/>
-        <PatrolPoints N="8" X="40.0" Y="0.5" Z="20.0">
+        <PatrolPoints N="6" X="40.0" Y="0.5" Z="20.0">
           <Randomise X="40.0" Y="0" Z = "40.0"/>
         </PatrolPoints>
       </Entity>
@@ -91,7 +91,7 @@
       <Position X="0.0" Y="0.0" Z="0.0"/>
     </Entity>
     <Entity Type="Building" Name="Building">
-      <Position X="0.0" Y="0.0" Z="0.0"/>
+      <Position X="0.0" Y="0.0" Z="40.0"/>
     </Entity>
 
   </Entities>

@@ -1,12 +1,12 @@
 ﻿  TankEntity.cpp
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.h(272,17): warning C4305: 'initializing': truncation from 'double' to 'const float'
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(161,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(216,33): warning C4244: 'argument': conversion from 'gen::TFloat64' to 'const gen::TFloat32', possible loss of data
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(288,26): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(292,26): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.h(275,17): warning C4305: 'initializing': truncation from 'double' to 'const float'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(149,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(204,33): warning C4244: 'argument': conversion from 'gen::TFloat64' to 'const gen::TFloat32', possible loss of data
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(389,25): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(393,25): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
 C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(520,10): warning C4244: '-=': conversion from 'float' to 'gen::TInt32', possible loss of data
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(548,29): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(549,27): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(550,28): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
-C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(551,28): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(548,34): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(549,32): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(550,33): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
+C:\Users\CCame\source\repos\GamesThree\Source\Scene\TankEntity.cpp(551,33): warning C4305: 'argument': truncation from 'double' to 'const gen::TFloat32'
   TankAssignment.vcxproj -> C:\Users\CCame\source\repos\GamesThree\TankAssignment.exe
